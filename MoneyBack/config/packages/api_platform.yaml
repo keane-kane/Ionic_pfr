@@ -1,0 +1,17 @@
+api_platform:
+    title: 'Symfony REST API'
+    description: 'A Symfony API for IONIC BACKEND'
+    version: '1.0.0'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+        jsonld:
+            mime_types:
+                - application/ld+json
+        html:
+            mime_types:
+                - text/html
+        multipart: ["multipart/form-data"]
+    swagger:
+        versions: [3]
