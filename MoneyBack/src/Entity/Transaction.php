@@ -74,8 +74,13 @@ class Transaction
     private $montant;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=255)
      * @Groups({"trans:read","trans:write"})
+     */
+    private $frais;
+
+    /**
+     * @ORM\Column(type="datetime")
      * @Assert\NotBlank(message="La Date est obligatoire")
      */
     private $createAt;
@@ -89,54 +94,59 @@ class Transaction
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La part de l'etat est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partEtat;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La part de l'agence est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partTransfert;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La part de depôt est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partDepot;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La part de retrait est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partRetrait;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"trans:read", "trans:write"})
+     * @Groups({"trans:read"})
      */
     private $archive = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="transact")
-     * @ApiSubresource()
-     * @Groups({"trans:read", "trans:write"})
-     * @Assert\NotBlank(message="Le user agence est obligatoire")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transaction")
+     * @Groups({"trans:read"})
      */
-    private $users;
-    
+    private $usertransaction;
+
     /**
-     * @ORM\OneToMany(targetEntity=Client::class, mappedBy="faire")
-     * @ApiSubresource()
-     * @Groups({"trans:read", "trans:write"})
-     * @Assert\NotBlank(message="Le Client est obligatoire")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="depot")
+     * @Groups({"trans:read","trans:write"})
      */
-    private $clients;
+    private $clientdepot;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="retrait")
+     * @Groups({"trans:read", "trans:write"})
+     */
+    private $clientretrait;
+
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
-        $this->clients = new ArrayCollection();
     } 
 
     public function getId(): ?int
@@ -253,61 +263,57 @@ class Transaction
     }
 
     /**
-     * @return Collection|User[]
+     * Get the value of frais
      */
-    public function getUsers(): Collection
+    public function getFrais()
     {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setTransact($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getTransact() === $this) {
-                $user->setTransact(null);
-            }
-        }
-
-        return $this;
+        return $this->frais;
     }
 
     /**
-     * @return Collection|Client[]
+     * Set the value of frais
+     *
+     * @return  self
      */
-    public function getClients(): Collection
+    public function setFrais($frais)
     {
-        return $this->clients;
-    }
-
-    public function addClient(Client $client): self
-    {
-        if (!$this->clients->contains($client)) {
-            $this->clients[] = $client;
-            $client->setFaire($this);
-        }
+        $this->frais = $frais;
 
         return $this;
     }
 
-    public function removeClient(Client $client): self
+    public function getUsertransaction(): ?User
     {
-        if ($this->clients->removeElement($client)) {
-            // set the owning side to null (unless already changed)
-            if ($client->getFaire() === $this) {
-                $client->setFaire(null);
-            }
-        }
+        return $this->usertransaction;
+    }
+
+    public function setUsertransaction(?User $usertransaction): self
+    {
+        $this->usertransaction = $usertransaction;
+
+        return $this;
+    }
+
+    public function getClientdepot(): ?Client
+    {
+        return $this->clientdepot;
+    }
+
+    public function setClientdepot(?Client $clientdepot): self
+    {
+        $this->clientdepot = $clientdepot;
+
+        return $this;
+    }
+
+    public function getClientretrait(): ?Client
+    {
+        return $this->clientretrait;
+    }
+
+    public function setClientretrait(?Client $clientretrait): self
+    {
+        $this->clientretrait = $clientretrait;
 
         return $this;
     }

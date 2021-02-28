@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -69,44 +71,59 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du client est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
     private $nomClient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du beneficiaire est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
     private $nomBeneficiaire;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le cni du client est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
     private $cniClient;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Le ni du beneficiaire est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
     private $cniBeneficiaire;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du client est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
     private $phoneClient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du beneficiaire est obligatoire")
-     * @Groups({"trans:read","trans:write})
+     * @Groups({"trans:read","trans:write"})
      */
-    private $phoneBeneficiaire; 
+    private $phoneBeneficiaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="clientdepot")
+     */
+    private $depot;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="clientretrait")
+     */
+    private $retrait;
+
+    public function __construct()
+    {
+        $this->depot = new ArrayCollection();
+        $this->retrait = new ArrayCollection();
+    } 
 
     public function getId(): ?int
     {
@@ -205,6 +222,66 @@ class Client
     public function setPhoneBeneficiaire(string $phoneBeneficiaire): self
     {
         $this->phoneBeneficiaire = $phoneBeneficiaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getDepot(): Collection
+    {
+        return $this->depot;
+    }
+
+    public function addDepot(Transaction $depot): self
+    {
+        if (!$this->depot->contains($depot)) {
+            $this->depot[] = $depot;
+            $depot->setClientdepot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Transaction $depot): self
+    {
+        if ($this->depot->removeElement($depot)) {
+            // set the owning side to null (unless already changed)
+            if ($depot->getClientdepot() === $this) {
+                $depot->setClientdepot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getRetrait(): Collection
+    {
+        return $this->retrait;
+    }
+
+    public function addRetrait(Transaction $retrait): self
+    {
+        if (!$this->retrait->contains($retrait)) {
+            $this->retrait[] = $retrait;
+            $retrait->setClientretrait($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetrait(Transaction $retrait): self
+    {
+        if ($this->retrait->removeElement($retrait)) {
+            // set the owning side to null (unless already changed)
+            if ($retrait->getClientretrait() === $this) {
+                $retrait->setClientretrait(null);
+            }
+        }
 
         return $this;
     }

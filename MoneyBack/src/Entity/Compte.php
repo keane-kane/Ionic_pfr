@@ -2,19 +2,22 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CompteRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CompteRepository::class)
  * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
- * normalizationContext   ={"groups"={"compte:read"}},
+ *      normalizationContext   ={"groups"={"compte:read"}},
+ *      denormalizationContext   ={"groups"={"compte:write"}},
  *      attributes={
  *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
@@ -51,21 +54,30 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"agence:read", "compte:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le code est obligatoire")
+     * @Groups({"agence:read", "compte:read"})
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\GreaterThanOrEqual(
+     *     value = 70000
+     * )
+     * @Assert\NotBlank(message="Le password est obligatoire")
+     * @Groups({"compte:read", "compte:write", "agence:read", "agence:write"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"compte:read", "agence:read"})
      */
     private $createAt;
 
@@ -75,13 +87,25 @@ class Compte
     private $archive = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="caissier", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Agence::class, mappedBy="appartient", cascade={"persist", "remove"})
+     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $users;
+    private $agence;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="caissierdepot")
+     */
+    private $usercaissier;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="useragence")
+     */
+    private $usertransaction;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+  
     } 
 
     public function getId(): ?int
@@ -137,33 +161,51 @@ class Compte
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
+    public function getAgence(): ?Agence
     {
-        return $this->users;
+        return $this->agence;
     }
 
-    public function addUser(User $user): self
+    public function setAgence(?Agence $agence): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setCaissier($this);
+        // unset the owning side of the relation if necessary
+        if ($agence === null && $this->agence !== null) {
+            $this->agence->setAppartient(null);
         }
+
+        // set the owning side of the relation if necessary
+        if ($agence !== null && $agence->getAppartient() !== $this) {
+            $agence->setAppartient($this);
+        }
+
+        $this->agence = $agence;
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function getUsercaissier(): ?User
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getCaissier() === $this) {
-                $user->setCaissier(null);
-            }
-        }
+        return $this->usercaissier;
+    }
+
+    public function setUsercaissier(?User $usercaissier): self
+    {
+        $this->usercaissier = $usercaissier;
 
         return $this;
     }
+
+    public function getUsertransaction(): ?User
+    {
+        return $this->usertransaction;
+    }
+
+    public function setUsertransaction(?User $usertransaction): self
+    {
+        $this->usertransaction = $usertransaction;
+
+        return $this;
+    }
+
+   
 }

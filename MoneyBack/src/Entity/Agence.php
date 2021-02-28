@@ -10,13 +10,16 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
  * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
  *      normalizationContext   ={"groups"={"agence:read"}},
+ *      denormalizationContext   ={"groups"={"agence:write"}},
  *      attributes={
+ *          "force_eager"=false,
  *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
@@ -52,42 +55,57 @@ class Agence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"agence:read", "compte:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"agence:read", "agence:write","compte:read", "compte:write"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"agence:read"})
      */
-    private $archive = 0;
+    private $archive = 1;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence")
-     */
-    private $users;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Compte::class, inversedBy="agence", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"agence:read", "agence:write"})
      */
     private $appartient;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="creerAgence")
+     * @Groups({"agence:read"})
+     */
+    private $adminsystem;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="agence", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"agence:read", "agence:write"})
+     */
+    private $adminagence;
+
+  
     public function __construct()
     {
-        $this->users = new ArrayCollection();
     } 
 
     public function getId(): ?int
@@ -143,36 +161,6 @@ class Agence
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setAgence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getAgence() === $this) {
-                $user->setAgence(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getAppartient(): ?Compte
     {
         return $this->appartient;
@@ -184,4 +172,29 @@ class Agence
 
         return $this;
     }
+
+    public function getAdminsystem(): ?User
+    {
+        return $this->adminsystem;
+    }
+
+    public function setAdminsystem(?User $adminsystem): self
+    {
+        $this->adminsystem = $adminsystem;
+
+        return $this;
+    }
+
+    public function getAdminagence(): ?User
+    {
+        return $this->adminagence;
+    }
+
+    public function setAdminagence(?User $adminagence): self
+    {
+        $this->adminagence = $adminagence;
+
+        return $this;
+    }
+
 }

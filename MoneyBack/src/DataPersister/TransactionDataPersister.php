@@ -43,9 +43,9 @@ class TransactionDataPersister implements DataPersisterInterface
                 ->setPartDepot($com * 0.1)
                 ;
             dd($data);
+            $this->_entityManager->persist($data);
+            $this->_entityManager->flush();
         }
-        $this->_entityManager->persist($data);
-        $this->_entityManager->flush();
     }
 
     /**

@@ -2,14 +2,11 @@
 
 namespace App\DataPersister;
 
-use App\Entity\User;
-use App\Entity\Profile;
 use App\Entity\Profils;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Entity\Transaction;
 
-final class ArchiveDataPersister implements DataPersisterInterface
+final class ProfilsDataPersister implements DataPersisterInterface
 {
 
     private $entityManager;
@@ -20,15 +17,7 @@ final class ArchiveDataPersister implements DataPersisterInterface
 
     public function supports($data): bool
     {  
-        switch($data){
-            
-            case $data: return $data instanceof Profils;
-            break;
-            case $data: return $data instanceof User;
-            break;
-            case $data: return $data instanceof Transaction;
-            break;
-        }
+        return $data instanceof Profils;
     }
 
     public function persist($data)

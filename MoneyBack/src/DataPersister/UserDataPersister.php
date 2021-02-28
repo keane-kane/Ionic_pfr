@@ -5,13 +5,13 @@ namespace App\DataPersister;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  *
  */
-class UserDataPersister implements DataPersisterInterface
+class UserDataPersister implements ContextAwareDataPersisterInterface
 {
     private $_entityManager;
     private $_passwordEncoder;
@@ -27,7 +27,7 @@ class UserDataPersister implements DataPersisterInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($data): bool
+    public function supports($data, $contexts = []): bool
     {
         return $data instanceof User;
     }
@@ -35,7 +35,7 @@ class UserDataPersister implements DataPersisterInterface
     /**
      * @param User $data
      */
-    public function persist($data)
+    public function persist($data, $contexts = [])
     {
         if ($data->getPlainPassword()) {
             $data->setPassword(
@@ -47,17 +47,23 @@ class UserDataPersister implements DataPersisterInterface
 
             $data->eraseCredentials();
         }
-        dd($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
+        //dd($data);
+        return $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($data)
+    public function remove($data, $contexts = [])
     {
-        $this->_entityManager->remove($data);
-        $this->_entityManager->flush();
+        if($contexts["item_operation_name"] === "DELETE"){
+
+            $data->setArchive(true);
+            $this->entityManager->flush();
+       }
+           
+       return $data;
     }
 }

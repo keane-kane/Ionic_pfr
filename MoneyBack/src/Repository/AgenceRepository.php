@@ -47,4 +47,13 @@ class AgenceRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getLastId()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
