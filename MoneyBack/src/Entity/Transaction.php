@@ -61,8 +61,7 @@ class Transaction
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trans:read"})
-     * @Assert\NotBlank(message="Le Code est obligatoire")
+     * @Groups({"trans:read","trans:write"})
      */
     private $code;
 
@@ -81,7 +80,6 @@ class Transaction
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="La Date est obligatoire")
      */
     private $createAt;
 
@@ -94,28 +92,24 @@ class Transaction
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="La part de l'etat est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partEtat;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="La part de l'agence est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partTransfert;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="La part de depôt est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partDepot;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="La part de retrait est obligatoire")
      * @Groups({"trans:read"})
      */
     private $partRetrait;
@@ -133,13 +127,14 @@ class Transaction
     private $usertransaction;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="depot")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="depot", cascade={"persist", "remove"})
+     * @Assert\NotBlank(message="Les paramétres du client est obligatoire")
      * @Groups({"trans:read","trans:write"})
      */
     private $clientdepot;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="retrait")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="retrait",  cascade={"persist", "remove"})
      * @Groups({"trans:read", "trans:write"})
      */
     private $clientretrait;

@@ -47,4 +47,23 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
     */
+    /**
+     * @return Transaction[] Returns an array of Transaction objects
+     */
+  
+    public function findByCode($no, $code)
+    {
+        return $this->createQueryBuilder('t')
+            ->Join('t.clientdepot', 'c')
+            ->andWhere('t.code = :code')
+            ->andWhere('c.phoneBeneficiaire = :no',)
+            ->setParameter('no', $no)
+            ->setParameter('code', $code)
+            ->orderBy('t.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
 }
