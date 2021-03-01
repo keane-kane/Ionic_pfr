@@ -1,0 +1,8 @@
+{
+  "name": "MoneyFront",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "4570d85d"
+}

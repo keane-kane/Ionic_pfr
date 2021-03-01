@@ -22,9 +22,21 @@ final class MoneyServices{
         $date = new \DateTime();
         return $date->format('H:i:s \O\n Y-m-d');
     }
-    public function updateSolde($security, $montant, $type, $partDepot){
+    public function updateSolde($security, $montant, $type, $part)
+    {
 
-        $compte = $security->getUser()->getCompte()->get;
+        $newsolde = 0;
+        $oldesolde = $security->getUser()->getCompte()->getMontant();
+        if($type === "depot")
+        {
+            $newsolde = $oldesolde - $montant + $part;
+            $security->getUser()->setCompte($newsolde);
+
+        }else if($type === "retrait")
+        {
+            $newsolde = $oldesolde + $montant + $part;
+            $security->getUser()->setCompte($newsolde);
+        }
 
     }
 

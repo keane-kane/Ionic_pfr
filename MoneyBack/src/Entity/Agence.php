@@ -81,7 +81,7 @@ class Agence
      * @ORM\Column(type="boolean")
      * @Groups({"agence:read"})
      */
-    private $archive = 1;
+    private $archive = 0;
 
     /**
      * @ORM\OneToOne(targetEntity=Compte::class, inversedBy="agence", cascade={"persist", "remove"})

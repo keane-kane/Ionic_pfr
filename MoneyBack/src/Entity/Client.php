@@ -63,11 +63,7 @@ class Client
      */
     private $archive = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Transaction::class, inversedBy="clients")
-     */
-    private $faire;
-
+ 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du client est obligatoire")
@@ -141,19 +137,7 @@ class Client
         
         return $this;
     }
-
-    public function getFaire(): ?Transaction
-    {
-        return $this->faire;
-    }
-
-    public function setFaire(?Transaction $faire): self
-    {
-        $this->faire = $faire;
-
-        return $this;
-    }
-
+    
     public function getNomClient(): ?string
     {
         return $this->nomClient;

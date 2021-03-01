@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      normalizationContext   ={"groups"={"compte:read"}},
  *      denormalizationContext   ={"groups"={"compte:write"}},
  *      attributes={
+ *          "force_eager"=false,
  *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
@@ -54,14 +55,14 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"agence:read", "compte:read"})
+     * @Groups({"agence:read", "compte:read",  "agence:write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le code est obligatoire")
-     * @Groups({"agence:read", "compte:read"})
+     * @Groups({"agence:read", "compte:read",  "agence:write"})
      */
     private $code;
 
