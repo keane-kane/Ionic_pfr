@@ -20,7 +20,7 @@ export class HomePage implements OnInit  {
    setInterval(() => {
     console.log('Hello world');
     this.router.navigate(['/login']);
-  } ,  2000);
+  } ,  20200);
  }
   async presentToast() {
     const toast = await this.toastCtrl.create({
