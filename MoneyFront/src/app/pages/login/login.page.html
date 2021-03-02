@@ -1,0 +1,36 @@
+<ion-header no-border>
+  <ion-toolbar color="secondary">
+    <ion-title class="ion-text-center"> Authentification </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button >
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content color="" padding>
+  <ion-img src="assets/images/moneyy.jpg"> </ion-img>
+  <form #form="ngForm" (ngSubmit)="submit(form)">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <ion-item >
+            <ion-label position="floating"> Adresse email</ion-label>
+            <ion-input type="text" required [(ngModel)]="email" name="email"></ion-input>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-label position="floating"> Mot de passe </ion-label>
+            <ion-input type="password" required [(ngModel)]="pass" name="pass"></ion-input>
+          </ion-item>
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" color="secondary" expand="block" shape="round" > S'INSCRIRE </ion-button>
+            </ion-col> 
+          </ion-row>
+          
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

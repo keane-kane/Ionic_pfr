@@ -1,0 +1,39 @@
+#container {
+  background-image: url("/assets/images/money.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  align-content:center;
+}
+
+
+p {
+  background-color: white;
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+}
+
+.money{
+  height: 120vh;
+}
+.savem{
+  height: 100px;
+  border-radius: 50% !important;
+}
+
+ion-spinner {
+  transform: scale(2);
+  width: 2em;
+  height: 2em;
+  --color: rgb(0, 183, 255);
+}
+.toast-costum-class{
+  --background:rgb(39, 212, 224); 
+  --color:rgb(39, 150, 224);
+  --text-align:center;
+  --white-space:12px
+}
