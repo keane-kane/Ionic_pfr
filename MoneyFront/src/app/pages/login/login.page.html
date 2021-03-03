@@ -1,34 +1,78 @@
-<ion-header no-border>
-  <ion-toolbar color="secondary">
-    <ion-title class="ion-text-center"> Authentification </ion-title>
-    <ion-buttons slot="start">
-      <ion-back-button >
-      </ion-back-button>
-    </ion-buttons>
+<div class="div-header">
+  <ion-toolbar>
+    <img class="tolbarimg" src="assets/images/moneyy.jpg" />
   </ion-toolbar>
-</ion-header>
-
+  <h1>Login </h1>
+  <hr class="hr">
+</div>
 
 <ion-content color="" padding>
-  <ion-img src="assets/images/moneyy.jpg"> </ion-img>
-  <form #form="ngForm" (ngSubmit)="submit(form)">
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
     <ion-grid>
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-          <ion-item >
-            <ion-label position="floating"> Adresse email</ion-label>
-            <ion-input type="text" required [(ngModel)]="email" name="email"></ion-input>
+
+          <ion-item class="form-input">
+            <ion-label position="floating"
+              ><ion-icon name="at" md="at">
+              </ion-icon> Email</ion-label
+            >
+            <ion-input
+              class=""
+              type="email"
+              size="30"
+              pInputText
+              name="email"
+              [(ngModel)]="form.email"
+              required
+              minlength="6"
+              name="email"
+              email
+              #email ="ngModel"
+            ></ion-input>
           </ion-item>
-          <ion-item lines="full">
-            <ion-label position="floating"> Mot de passe </ion-label>
-            <ion-input type="password" required [(ngModel)]="pass" name="pass"></ion-input>
+
+          <ion-item class="form-input">
+            <ion-label position="floating">
+              <ion-icon name="key"></ion-icon> 
+              password
+            </ion-label>
+            <ion-input 
+             type="text" *ngIf="showPwd"
+              [(ngModel)]="form.password" 
+              name="password"
+              required
+              minlength="5"
+              #password ="ngModel"
+              >
+            </ion-input>
+            <ion-input 
+            type="password" 
+            *ngIf="!showPwd" 
+            [(ngModel)]="form.password"
+             name="password"
+             required
+             minlength="5"
+             #password ="ngModel"
+             >
+            </ion-input>
+            <button icon-only class="ion-button" clear type="button" item-right (click)="showPwd=!showPwd">
+              <ion-icon *ngIf="showPwd" name="eye" slot="end"></ion-icon>
+              <ion-icon *ngIf="!showPwd" name="eye-off" slot="end"></ion-icon>
+            </button>
           </ion-item>
-          <ion-row>
+
+          <ion-row >
             <ion-col>
-              <ion-button type="submit" color="secondary" expand="block" shape="round" > S'INSCRIRE </ion-button>
-            </ion-col> 
+              <ion-button
+                type="submit"
+                expand="block"
+                shape="block"
+              >
+                connexion
+              </ion-button>
+            </ion-col>
           </ion-row>
-          
         </ion-col>
       </ion-row>
     </ion-grid>

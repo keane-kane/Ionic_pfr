@@ -18,9 +18,9 @@ export class HomePage implements OnInit  {
   }
  ngOnInit(){
    setInterval(() => {
-    console.log('Hello world');
-    this.router.navigate(['/login']);
-  } ,  20200);
+    // this.router.navigate(['/login']);
+    this.router.navigate(['/register']);
+  } ,  2000);
  }
   async presentToast() {
     const toast = await this.toastCtrl.create({

@@ -1,0 +1,45 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>calcfrais</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+  <div class="entete">
+    <div class="logo">
+      <img src="../../assets/logo.png" alt="">
+    </div>
+
+    <div class="t-login">
+      <span>
+        <ion-icon color="secondary" slot="start" name="calculator-sharp"></ion-icon>
+        <ion-text color="secondary">Calculateur de Frais</ion-text>
+      </span>
+    </div>
+  </div>
+
+  <div class="contenu">
+    <ion-item>
+      <ion-label position="stacked"> Type de Transaction </ion-label>
+      <ion-select placeholder="Select">
+        <ion-select-option value="depot">Dépôt</ion-select-option>
+        <ion-select-option value="retrait">Retrait</ion-select-option>
+      </ion-select>
+
+
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">
+        Montant
+      </ion-label>
+      <ion-input type="text"> </ion-input>
+    </ion-item>
+
+    <br>
+    <ion-button item-end color="danger" shape="round">
+      Calculer
+    </ion-button>
+
+  </div>
+</ion-content>

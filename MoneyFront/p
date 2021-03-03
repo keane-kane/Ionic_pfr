@@ -1,0 +1,59 @@
+ <ion-input type="text" *ngIf="showPasswordText"></ion-input>
+          <ion-input type="password" *ngIf="!showPasswordText" ></ion-input>
+          <button ion-button clear color="dark" type="button" item-right (click)="showPasswordText = !showPasswordText">
+            <ion-icon name="eye"> </ion-icon>
+          </button>
+
+
+
+<button 
+  ion-button
+  icon-only 
+  clear 
+  color="dark" 
+  type="button" 
+  item-right 
+  (click)="showPasswordText = !showPasswordText"
+>
+
+
+                <ion-item>
+        <ion-label floating>password</ion-label>
+        <ion-input type="text" *ngIf="showPwd" [(ngModel)]="user.pwd"></ion-input>
+        <ion-input type="password" *ngIf="!showPwd" [(ngModel)]="user.pwd"></ion-input>
+        <button icon-only ion-button clear type="button" item-right (click)="showPwd=!showPwd">
+          <ion-icon *ngIf="showPwd" name="eye"></ion-icon>
+          <ion-icon *ngIf="!showPwd" name="eye-off"></ion-icon>
+        </button>
+      </ion-item>
+
+
+
+
+
+       public const ADMIN_SYS_REFERENCE = 'ADMIN_SYS';
+    public const ADMIN_AGENCE_REFERENCE = 'ADMIN_AGENCE';
+    public const CAISSIER_REFERENCE = 'CAISSIER';
+    public const USER_AGENCE_REFERENCE = 'USER_AGENCE';
+
+     <div>
+    <ion-tabs >
+      <ion-tab-bar id="menu-bas" slot="bottom">
+        <ion-tab-button tab="schedule">
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-tab-button>
+
+        <ion-tab-button tab="speakers">
+          <ion-icon name="sync-sharp"></ion-icon>
+        </ion-tab-button>
+
+        <ion-tab-button tab="map">
+          <ion-icon name="log-in-sharp"></ion-icon>
+        </ion-tab-button>
+
+        <ion-tab-button tab="about">
+          <ion-icon name="calculator-sharp"></ion-icon>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </div>

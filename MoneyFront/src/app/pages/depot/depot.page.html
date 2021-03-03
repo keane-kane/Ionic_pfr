@@ -1,0 +1,110 @@
+<ion-content>
+
+  <div class="entete">
+    <div class="logo">
+      <img src="../../assets/logo.png" alt="">
+    </div>
+
+    <div class="t-login">
+      <span>
+        <ion-icon color="secondary" slot="start" name="return-up-forward-outline"></ion-icon>
+        <ion-text color="secondary">Dépôt</ion-text>
+      </span>
+    </div>
+  </div>
+  <div class="contenu">
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)" value="emetteur">
+
+      <ion-segment-button value="emetteur">
+        Emetteur
+      </ion-segment-button>
+      <ion-segment-button value="beneficiaire">
+        Bénéficiaire
+      </ion-segment-button>
+
+    </ion-segment>
+
+
+    <div [ngSwitch]="segment">
+      <div *ngSwitchCase="'emetteur'">
+
+        <ion-item>
+          <ion-label position="stacked">
+            N CNI
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Nom
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Prénom
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Téléphone
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Montant
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Frais
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Total
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+      </div>
+
+
+      <!-- Beneficiaire -->
+      <div *ngSwitchCase="'beneficiaire'">
+
+        <ion-item>
+          <ion-label position="stacked">
+            Nom
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Prénom
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            Téléphone
+          </ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+
+
+
+      </div>
+
+
+    </div>
+
+    <br>
+    <ion-button expand="block" slot="bottom" color="danger" shape="round">
+      Suivant
+    </ion-button>
+  </div>
+</ion-content>

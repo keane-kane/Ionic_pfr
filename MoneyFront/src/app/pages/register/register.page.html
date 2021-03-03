@@ -1,0 +1,133 @@
+<div class="div-header">
+  <ion-toolbar>
+    <img class="tolbarimg" src="assets/images/moneyy.jpg" />
+  </ion-toolbar>
+  <h1>Register </h1>
+  <hr class="hr">
+</div>
+
+<ion-content color="" padding>
+  <form [formGroup]="userForm" (ngSubmit)="onRegister()">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          
+          <ion-item class="form-input">
+            <ion-label position="floating"
+              >
+               Prénom</ion-label
+            >
+            <ion-input
+              class=""
+              type="text"
+              required
+              formControlName="prenom"
+              name="prenom"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="form-input">
+            <ion-label position="floating"
+              >Nom</ion-label
+            >
+            <ion-input
+              class=""
+              type="text"
+              required
+              formControlName="nom"
+              name="nom"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="form-input">
+            <ion-label position="floating"
+              ><ion-icon name="at" md="at">
+              </ion-icon> Email</ion-label
+            >
+            <ion-input
+              class=""
+              type="text"
+              required
+              formControlName="email"
+              name="email"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="form-input">
+            <ion-label position="floating">
+              <ion-icon name="key"></ion-icon> 
+              password
+            </ion-label>
+            <ion-input 
+             type="text" *ngIf="showPwd"
+             formControlName="password" 
+              name="password"
+              required
+              minlength="5"
+              >
+            </ion-input>
+            <ion-input 
+            type="password" 
+            *ngIf="!showPwd" 
+             formControlName="password"
+             name="password"
+             required
+             minlength="5"
+             >
+            </ion-input>
+            <button icon-only class="ion-button" clear type="button" item-right (click)="showPwd=!showPwd">
+              <ion-icon *ngIf="showPwd" name="eye" slot="end"></ion-icon>
+              <ion-icon *ngIf="!showPwd" name="eye-off" slot="end"></ion-icon>
+            </button>
+          </ion-item>
+
+        
+            <ion-item class="form-input">
+              <ion-label position="floating">
+                <ion-icon name="person-outline"></ion-icon> 
+                Select One Profil
+              </ion-label>
+            <ion-select 
+            placeholder="Select One"
+            formControlName="profil"
+            placeholder="profil"
+            required
+            >
+              <ion-select-option value="m">Male</ion-select-option>
+              <ion-select-option value="m">Male</ion-select-option>
+              <ion-select-option value="m">Male</ion-select-option>
+              <ion-select-option value="m">Male</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="form-input">
+            <ion-label position="floating"
+              ><ion-icon name="call" md="call">
+              </ion-icon> Phone</ion-label
+            >
+            <ion-input
+              class=""
+              type="text"
+              required
+              formControlName="phone"
+              name="phone"
+            ></ion-input>
+
+          </ion-item>
+          <ion-row >
+            <ion-col>
+              <ion-button
+                type="submit"
+                expand="block"
+                shape="block"
+              >
+                register
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-input type="hidden" formControlName="id"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
