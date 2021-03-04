@@ -8,6 +8,9 @@ import { SidemenuPageRoutingModule } from './sidemenu-routing.module';
 
 import { SidemenuPage } from './sidemenu.page';
 
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,24 +18,10 @@ import { SidemenuPage } from './sidemenu.page';
     IonicModule,
     SidemenuPageRoutingModule
   ],
-  declarations: [SidemenuPage]
+  providers: [
+    SplashScreen,
+    StatusBar,
+  ],
+  declarations: []
 })
-export class SidemenuPageModule {
-
-  constructor(private menu: MenuController) { }
-
-  openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
-  }
-
-  openEnd() {
-    this.menu.open('end');
-  }
-
-  openCustom() {
-    this.menu.enable(true, 'custom');
-    this.menu.open('custom');
-  }
-
-}
+export class SidemenuPageModule { }

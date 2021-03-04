@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SidemenuPage } from './pages/sidemenu/sidemenu.page';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  rootPage: any = SidemenuPage;
   constructor() {}
 }

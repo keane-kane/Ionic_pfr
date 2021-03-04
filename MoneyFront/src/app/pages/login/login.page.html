@@ -23,12 +23,11 @@
               size="30"
               pInputText
               name="email"
-              [(ngModel)]="form.email"
+              [(ngModel)]="email"
               required
               minlength="6"
               name="email"
               email
-              #email ="ngModel"
             ></ion-input>
           </ion-item>
 
@@ -39,21 +38,19 @@
             </ion-label>
             <ion-input 
              type="text" *ngIf="showPwd"
-              [(ngModel)]="form.password" 
+              [(ngModel)]="password" 
               name="password"
               required
               minlength="5"
-              #password ="ngModel"
               >
             </ion-input>
             <ion-input 
             type="password" 
             *ngIf="!showPwd" 
-            [(ngModel)]="form.password"
+            [(ngModel)]="password"
              name="password"
              required
              minlength="5"
-             #password ="ngModel"
              >
             </ion-input>
             <button icon-only class="ion-button" clear type="button" item-right (click)="showPwd=!showPwd">

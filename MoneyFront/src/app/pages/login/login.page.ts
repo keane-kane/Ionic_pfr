@@ -12,6 +12,7 @@ export class LoginPage implements OnInit {
   email: string;
   password: string;
   showPwd = false;
+  form: any = {password: '', email: ''};
   msgs: any = {};
 
   disabledButton;
@@ -46,7 +47,7 @@ export class LoginPage implements OnInit {
             this.userContextService.setUser(decodedToken);
             this.routeStateService.add(
               'Users',
-              '/transaction',
+              '/accueil',
               null,
               true
             );
@@ -57,7 +58,7 @@ export class LoginPage implements OnInit {
               this.userContextService.setUser(decodedToken);
               this.routeStateService.add(
                 'Users',
-                '/transaction',
+                '/accueil',
                 null,
                 true
               );

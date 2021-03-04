@@ -80,6 +80,7 @@ class Transaction
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"trans:read"})
      */
     private $createAt;
 

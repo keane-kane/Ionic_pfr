@@ -47,8 +47,6 @@ class TransactionDataPersister implements DataPersisterInterface
     {   
         if($data->getType() != "" && $data->getType() === "depot")
         {
-            $oldesolde = $this->security->getUser();
-            dd($oldesolde);
             if ($data->getFrais() == null)
             {
                 $frais = $this->getFrait($data->getMontant());

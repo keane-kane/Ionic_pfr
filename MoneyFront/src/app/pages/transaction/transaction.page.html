@@ -1,9 +1,80 @@
+
 <ion-header>
-  <ion-toolbar>
-    <ion-title>transaction</ion-title>
-  </ion-toolbar>
+  <div class="header">
+    <ion-toolbar>
+      <ion-row justify-content-center>
+        <ion-col size="5">
+          <button icon-only class="ion-button" clear type="button"  routerLink="/home" >
+            <ion-icon name="home"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col>
+
+          <ion-avatar>
+            <img src="../../assets/images/savem.png">
+          </ion-avatar>
+      
+        </ion-col>
+      </ion-row>
+      <ion-row class="justify-content-center">
+        <ion-col size="7" >
+          <span>
+            <ion-icon color="secondary" slot="start" name="return-up-forward-outline"></ion-icon>
+            <ion-text color="secondary">Dépôt</ion-text>
+          </span>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </div>
 </ion-header>
 
 <ion-content>
 
+
+  <div class="contenu">
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)" value="mestransaction">
+
+  <ion-segment-button value="mestransaction">
+    <ion-label>Mes transactions</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="toutmestransaction">
+    <ion-label>Toutes les transactions</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+    <div [ngSwitch]="segment">
+      <div *ngSwitchCase="'mestransaction'">
+
+        <div class="ion-padding">
+
+          <!-- Theme classes dark, material, bootstrap -->
+          <ngx-datatable 
+            class="material"
+            [limit]="8" 
+            [rows]="rows" 
+            [rowHeight]="50" 
+            [columns]="columns"
+            [columnMode]="'force'" 
+            [sortType]="'multi'" 
+            [headerHeight]="50" 
+            [footerHeight]="50">
+          </ngx-datatable>
+      
+        </div>
+      </div>
+
+      <!-- Beneficiaire -->
+      <div *ngSwitchCase="'toutmestransaction'">
+
+ 
+      </div>
+
+
+    </div>
+
+    <br>
+    <ion-button expand="block" slot="bottom" color="" shape="round">
+      Suivant
+    </ion-button>
+  </div>
 </ion-content>

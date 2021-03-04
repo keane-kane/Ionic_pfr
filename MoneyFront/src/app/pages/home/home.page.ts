@@ -19,7 +19,7 @@ export class HomePage implements OnInit  {
  ngOnInit(){
    setInterval(() => {
     // this.router.navigate(['/login']);
-    this.router.navigate(['/register']);
+    this.router.navigate(['/accueil']);
   } ,  2000);
  }
   async presentToast() {

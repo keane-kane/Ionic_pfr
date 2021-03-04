@@ -9,19 +9,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthGuard } from './core/gaurds/auth.gaurd';
 import { httpInterceptorProviders } from './core/helpers';
 import { HttpClientModule } from '@angular/common/http';
+import { SidemenuPageModule } from './pages/sidemenu/sidemenu.module';
+import { SidemenuPage } from './pages/sidemenu/sidemenu.page';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SidemenuPage],
   entryComponents: [],
   imports: [
-    BrowserModule,
+  BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
   ],
 
   providers: [
-
     AuthGuard,
     httpInterceptorProviders,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

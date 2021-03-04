@@ -6,10 +6,38 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidemenu.page.scss'],
 })
 export class SidemenuPage implements OnInit {
+  navigate: any =
+  [
+    {
+      title : 'Home',
+      url   : '/home',
+      icon  : 'home'
+    },
+    {
+      title : 'Transactions',
+      url   : '/transaction',
+      icon  : 'sync'
+    },
+    {
+      title : 'Commissions',
+      url   : '/commision',
+      icon  : 'logo-euro'
+    },
+    {
+      title : 'Calculatrice',
+      url   : '/calcfrais',
+      icon  : 'calculator'
+    },
+  ];
+  constructor(){
 
-  constructor() { }
-
-  ngOnInit() {
   }
+
+  ngOnInit(): void {
+  }
+
+
+
+
 
 }
