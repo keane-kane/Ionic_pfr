@@ -1,9 +1,32 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>calcfrais</ion-title>
-  </ion-toolbar>
-</ion-header> -->
 
+<ion-header>
+  <div class="header">
+    <ion-toolbar>
+      <ion-row justify-content-center>
+        <ion-col size="5">
+          <button icon-only class="ion-button" clear type="button"  routerLink="/home" >
+            <ion-icon name="home"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col>
+
+          <ion-avatar>
+            <img src="../../assets/images/savem.png">
+          </ion-avatar>
+      
+        </ion-col>
+      </ion-row>
+      <ion-row class="justify-content-center">
+        <ion-col size="7" >
+          <span>
+            <ion-icon color="secondary" slot="start" name="calculator"></ion-icon>
+            <ion-text color="secondary">Frais</ion-text>
+          </span>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </div>
+</ion-header>
 <ion-content>
   <div class="entete">
     <div class="logo">
@@ -37,7 +60,7 @@
     </ion-item>
 
     <br>
-    <ion-button item-end color="danger" shape="round">
+    <ion-button item-end color="" shape="round">
       Calculer
     </ion-button>
 

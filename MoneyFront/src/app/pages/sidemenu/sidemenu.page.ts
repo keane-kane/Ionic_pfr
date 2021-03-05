@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { RouteStateService } from 'src/app/core/services/route-state.service';
+import { SessionService } from 'src/app/core/services/session.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-sidemenu',
@@ -6,6 +11,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidemenu.page.scss'],
 })
 export class SidemenuPage implements OnInit {
+
+
   navigate: any =
   [
     {
@@ -28,8 +35,15 @@ export class SidemenuPage implements OnInit {
       url   : '/calcfrais',
       icon  : 'calculator'
     },
+
   ];
-  constructor(){
+  constructor(
+    private router: Router,
+    private routeStateService: RouteStateService,
+    private sessionService: SessionService,
+    private authService: AuthService,
+    private userContextService: UserContextService
+  ){
 
   }
 
@@ -37,7 +51,13 @@ export class SidemenuPage implements OnInit {
   }
 
 
-
+  logOut(){
+    this.routeStateService.removeAll();
+    this.userContextService.logout();
+    this.authService.logout();
+    this.sessionService.removeItem('active-menu');
+    this.router.navigate(['/login']);
+  }
 
 
 }

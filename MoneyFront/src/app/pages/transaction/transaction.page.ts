@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SharedService } from 'src/app/core/services/shared.service';
 
 import { ViewEncapsulation } from '@angular/core';
+import { TabsPage } from '../tabs/tabs.page';
 
 @Component({
   selector: 'app-transaction',
@@ -10,7 +11,7 @@ import { ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class TransactionPage implements OnInit {
-
+  // rootPage: any = TabsPage;
   segment: any;
   transac = [];
   public data: any;

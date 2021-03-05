@@ -5,6 +5,10 @@
         <ion-icon [name]="pages.icon" slot="start"></ion-icon>
            {{pages.title}} 
     </ion-item>
+    <ion-item  (click)="logOut()">
+      <ion-icon name="log-out" slot="start"></ion-icon>
+         Déconnexion
+  </ion-item>
   </ion-menu-toggle>
  
 </ion-menu>
