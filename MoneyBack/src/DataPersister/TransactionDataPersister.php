@@ -29,7 +29,6 @@ class TransactionDataPersister implements DataPersisterInterface
         $this->security = $security;
         $this->moneyservice = $moneyservice;
         $this->transripo = $transripo;
-
     }
 
     /**
@@ -44,41 +43,61 @@ class TransactionDataPersister implements DataPersisterInterface
      * @param Transaction $data
      */
     public function persist($data)
-    {   
-        if($data->getType() != "" && $data->getType() === "depot")
-        {
-            if ($data->getFrais() == null)
-            {
+    {
+        if ($data->getType() != "" && $data->getType() === "depot") {
+
+            $frais = 0;
+            $soldeCompte = 0;
+            $soldeTransmis = 0; 
+            if ($data->getFrais() == null) {
                 $frais = $this->getFrait($data->getMontant());
                 $data->setMontant($data->getMontant() - $frais);
                 $com =  $this->getFrait($data->getMontant());
-                if($frais > $com){ $data->setFrais($com); }
-                else { $data->setFrais($com); }
+                if ($frais > $com) {
+                    $data->setFrais($com);
+                } else {
+                    $data->setFrais($com);
+                }
                 // dd($data);
             }
-            if ($data->getMontant()) {
-    
+            if ($data->getMontant() > 0) {
+
+                $soldeCompte = $this->security->getUser()->getAgencePartenaire()->getCompte()->getMontant();
+                $compte = $this->security->getUser()->getAgencePartenaire()->getCompte();
+               // dd($this->security->getUser()->getAgencePartenaire()->getCompte());
                 $com = $this->getFrait($data->getMontant());
                 $data
                     ->setPartEtat($com * 0.4)
                     ->setPartTransfert($com * 0.3)
                     ->setPartRetrait($com * 0.2)
                     ->setPartDepot($com * 0.1)
-                    ->setCode($this->moneyservice->getCodetransaction($data->getClientdepot()->getCniClient()))
-                    ->setUsertransaction($this->security->getUser())
-                    ->setCreateAt(new \DateTime())
-                    ;
-                    $this->_entityManager->persist($data);
-                    $this->_entityManager->flush();
-                    dd($data);
+                    ->setCode($this->moneyservice->getCodetransaction($data->getClientTrans()->getCniClient()))
+                    ->setUserAgenceTransaction($this->security->getUser())
+                    ->setDateDepot(new \DateTime())
+                ;
+                $compte->setMontant(($soldeCompte - $data->getMontant()) + $com * 0.1);
+            
+                $this->_entityManager->persist($data);
+                $this->_entityManager->flush();
+                return $data;
+                //dd($data);
             }
-        }else if($data->getType() != "" && $data->getType() === "retrait")
-        {
-          
-          $clientR = $this->transripo->findByCode($data->getClientretrait()->getPhoneBeneficiaire()
-                 , $data->getCode()
-         );
-          dd($clientR);
+        } else if ($data->getType() != "" && $data->getType() === "retrait") {
+
+            $clientR = $this->transripo->findByCode(
+                $data->getClientTrans()->getPhoneBeneficiaire(),
+                $data->getCode()
+            );
+             if($clientR == 0)
+              return "cet code n'existe pas";
+            $clientR->setUserAgenceTransaction($this->security->getUser())
+                    ->setDateRetrait(new \DateTime())
+                    ->setType($data->getType())
+                    ;
+                    dd($clientR);
+            $this->_entityManager->persist($data);
+            $this->_entityManager->flush();
+            return $data;
         }
     }
 

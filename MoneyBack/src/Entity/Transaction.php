@@ -78,11 +78,18 @@ class Transaction
      */
     private $frais;
 
+  
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"trans:read"})
+     * @Groups({"trans:read","trans:write"})
      */
-    private $createAt;
+    private $dateDepot;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"trans:read","trans:write"})
+     */
+    private $dateRetrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -92,28 +99,28 @@ class Transaction
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      * @Groups({"trans:read"})
      */
-    private $partEtat;
+    private $partEtat = 0;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      * @Groups({"trans:read"})
      */
-    private $partTransfert;
+    private $partTransfert = 0;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      * @Groups({"trans:read"})
      */
-    private $partDepot;
+    private $partDepot = 0;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      * @Groups({"trans:read"})
      */
-    private $partRetrait;
+    private $partRetrait = 0;
 
     /**
      * @ORM\Column(type="boolean")
@@ -122,24 +129,26 @@ class Transaction
     private $archive = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transaction")
-     * @Groups({"trans:read"})
-     */
-    private $usertransaction;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="depot", cascade={"persist", "remove"})
-     * @Assert\NotBlank(message="Les paramétres du client est obligatoire")
+     * @ORM\OneToOne(targetEntity=Client::class, inversedBy="transaction", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      * @Groups({"trans:read","trans:write"})
+     * @Groups({"client:read", "client:write"})
      */
-    private $clientdepot;
+    private $clientTrans;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="retrait",  cascade={"persist", "remove"})
-     * @Groups({"trans:read", "trans:write"})
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions", cascade={"persist", "remove"})
      */
-    private $clientretrait;
+    private $userAgenceTransaction;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="transactions")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write"
+     * })
+     */
+    private $compte;
 
     public function __construct()
     {
@@ -174,14 +183,26 @@ class Transaction
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeInterface
+    public function getDateDepot(): ?\DateTimeInterface
     {
-        return $this->createAt;
+        return $this->dateDepot;
     }
 
-    public function setCreateAt(\DateTimeInterface $createAt): self
+    public function setDateDepot(\DateTimeInterface $dateDepot): self
     {
-        $this->createAt = $createAt;
+        $this->dateDepot = $dateDepot;
+
+        return $this;
+    }
+
+    public function getDateRetrait(): ?\DateTimeInterface
+    {
+        return $this->dateRetrait;
+    }
+
+    public function setDateRetrait(\DateTimeInterface $dateRetrait): self
+    {
+        $this->dateRetrait = $dateRetrait;
 
         return $this;
     }
@@ -278,39 +299,41 @@ class Transaction
         return $this;
     }
 
-    public function getUsertransaction(): ?User
+    public function getClientTrans(): ?Client
     {
-        return $this->usertransaction;
+        return $this->clientTrans;
     }
 
-    public function setUsertransaction(?User $usertransaction): self
+    public function setClientTrans(?Client $clientTrans): self
     {
-        $this->usertransaction = $usertransaction;
+        $this->clientTrans = $clientTrans;
 
         return $this;
     }
 
-    public function getClientdepot(): ?Client
+    public function getUserAgenceTransaction(): ?User
     {
-        return $this->clientdepot;
+        return $this->userAgenceTransaction;
     }
 
-    public function setClientdepot(?Client $clientdepot): self
+    public function setUserAgenceTransaction(?User $userAgenceTransaction): self
     {
-        $this->clientdepot = $clientdepot;
+        $this->userAgenceTransaction = $userAgenceTransaction;
 
         return $this;
     }
 
-    public function getClientretrait(): ?Client
+    public function getCompte(): ?Compte
     {
-        return $this->clientretrait;
+        return $this->compte;
     }
 
-    public function setClientretrait(?Client $clientretrait): self
+    public function setCompte(?Compte $compte): self
     {
-        $this->clientretrait = $clientretrait;
+        $this->compte = $compte;
 
         return $this;
     }
+
+  
 }

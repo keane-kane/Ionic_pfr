@@ -5,31 +5,26 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 
 const routes: Routes = [
   {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
-  },
-  {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
+    path: 'accueil',
+    loadChildren: () => import('./pages/accueil/accueil.module').then( m => m.AccueilPageModule),
+  },
+  {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule),
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'transaction',
-    loadChildren: () => import('./pages/transaction/transaction.module').then( m => m.TransactionPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'accueil',
-    loadChildren: () => import('./pages/accueil/accueil.module').then( m => m.AccueilPageModule),
   },
   {
     path: 'admin-agence',
@@ -61,6 +56,16 @@ const routes: Routes = [
   {
     path: 'retrait',
     loadChildren: () => import('./pages/retrait/retrait.module').then( m => m.RetraitPageModule)
+  },
+  {
+    path: 'mestransaction',
+    loadChildren: () => import('./pages/transaction/transaction.module').then( m => m.TransactionPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'ttesmestransaction',
+    loadChildren: () => import('./pages/transaction/transaction.module').then( m => m.TransactionPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'error',

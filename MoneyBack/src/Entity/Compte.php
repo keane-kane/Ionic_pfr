@@ -7,10 +7,11 @@ use App\Repository\CompteRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=CompteRepository::class)
@@ -55,14 +56,19 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"agence:read", "compte:read",  "agence:write"})
+     * @Groups({ "compte:read", "agence:read",  "agence:write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le code est obligatoire")
-     * @Groups({"agence:read", "compte:read",  "agence:write"})
+     * @Groups({
+     *      "compte:read", "compte:write",
+     *      "agence:read", "agence:write",
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write"
+     * })
      */
     private $code;
 
@@ -71,8 +77,13 @@ class Compte
      * @Assert\GreaterThanOrEqual(
      *     value = 70000
      * )
-     * @Assert\NotBlank(message="Le password est obligatoire")
-     * @Groups({"compte:read", "compte:write", "agence:read", "agence:write"})
+     * @Assert\NotBlank(message="Le montant est obligatoire")
+     * @Groups({
+     *      "compte:read", "compte:write",
+     *      "agence:read", "agence:write",
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write"
+     * })
      */
     private $montant;
 
@@ -84,29 +95,33 @@ class Compte
 
     /**
      * @ORM\Column(type="boolean")
+     *  @Groups({"compte:read", "agence:read"})
      */
     private $archive = 0;
-
+    
     /**
-     * @ORM\OneToOne(targetEntity=Agence::class, mappedBy="appartient", cascade={"persist", "remove"})
-     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=Agence::class, mappedBy="compte", cascade={"persist", "remove"})
      */
     private $agence;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="caissierdepot")
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte")
+     * @Groups({
+     *      "compte:read", "compte:write",
+     *      "agence:read","trans:read",
+     * })
      */
-    private $usercaissier;
+    private $transactions;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="useragence")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comptes")
      */
-    private $usertransaction;
+    private $users;
+
 
     public function __construct()
     {
-  
+        $this->transactions = new ArrayCollection();
     } 
 
     public function getId(): ?int
@@ -162,51 +177,48 @@ class Compte
         return $this;
     }
 
-    public function getAgence(): ?Agence
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
     {
-        return $this->agence;
+        return $this->transactions;
     }
 
-    public function setAgence(?Agence $agence): self
+    public function addTransaction(Transaction $transaction): self
     {
-        // unset the owning side of the relation if necessary
-        if ($agence === null && $this->agence !== null) {
-            $this->agence->setAppartient(null);
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setCompte($this);
         }
 
-        // set the owning side of the relation if necessary
-        if ($agence !== null && $agence->getAppartient() !== $this) {
-            $agence->setAppartient($this);
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCompte() === $this) {
+                $transaction->setCompte(null);
+            }
         }
 
-        $this->agence = $agence;
+        return $this;
+    }
+
+    public function getUsers(): ?User
+    {
+        return $this->users;
+    }
+
+    public function setUsers(?User $users): self
+    {
+        $this->users = $users;
 
         return $this;
     }
 
-    public function getUsercaissier(): ?User
-    {
-        return $this->usercaissier;
-    }
-
-    public function setUsercaissier(?User $usercaissier): self
-    {
-        $this->usercaissier = $usercaissier;
-
-        return $this;
-    }
-
-    public function getUsertransaction(): ?User
-    {
-        return $this->usertransaction;
-    }
-
-    public function setUsertransaction(?User $usertransaction): self
-    {
-        $this->usertransaction = $usertransaction;
-
-        return $this;
-    }
 
    
 }

@@ -67,7 +67,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email
      * @Assert\NotBlank(message="Le mail est obligatoire")
-     * @Groups({"trans:read", "users:write"})
+     * @Groups({"users:read", "users:write"})
      * @Groups({"agence:read", "agence:write"})
      */
     private $email;
@@ -86,9 +86,10 @@ class User implements UserInterface
 
   
     /**
-     * @ORM\ManyToOne(targetEntity=profils::class, inversedBy="users", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=profils::class, inversedBy="users", )
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"profil:read","profil:write","trans:read", "users:write"})
+     * @Groups({"profil:read","profil:write"})
+     * @Groups({"users:read", "users:write"})
      * @Groups({"agence:read", "agence:write"})
      */
     private $profil;
@@ -106,7 +107,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le prenom est obligatoire")
-     * @Groups({"trans:read"})
+     * @Groups({"users:read", "users:write"})
      * @Groups({"agence:read", "agence:write"})
      */
     private $prenom;
@@ -114,7 +115,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom est obligatoire")
-     * @Groups({"trans:read"})
+     * @Groups({"users:read", "users:write"})
      * @Groups({"agence:read", "agence:write"})
      */
     private $nom;
@@ -122,45 +123,35 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero est obligatoire")
-     * @Groups({"trans:read"})
+     * @Groups({"users:read", "users:write"})
      * @Groups({"agence:read", "agence:write"})
      */
     private $phone;
 
+ 
     /**
-     * @ORM\OneToMany(targetEntity=Agence::class, mappedBy="adminsystem")
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="userAgenceTransaction")
      */
-    private $creerAgence;
+    private $transactions;
+
 
     /**
-     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="usercaissier")
+     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="users")
      */
-    private $caissierdepot;
+    private $comptes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="usertransaction")
+     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="users")
+     * @Groups({"users:read", "users:write"})
+     * @Groups({"trans:read","trans:write"})
      */
-    private $useragence;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="usertransaction")
-     */
-    private $transaction;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Agence::class, mappedBy="adminagence", orphanRemoval=true)
-     */
-    private $agence;
+    private $agencePartenaire;
 
     public function __construct()
     {
-        $this->creerAgence = new ArrayCollection();
-        $this->caissierdepot = new ArrayCollection();
-        $this->useragence = new ArrayCollection();
-        $this->transaction = new ArrayCollection();
-        $this->agence = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->comptes = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -316,109 +307,19 @@ class User implements UserInterface
         $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection|Agence[]
-     */
-    public function getCreerAgence(): Collection
-    {
-        return $this->creerAgence;
-    }
-
-    public function addCreerAgence(Agence $creerAgence): self
-    {
-        if (!$this->creerAgence->contains($creerAgence)) {
-            $this->creerAgence[] = $creerAgence;
-            $creerAgence->setAdminsystem($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreerAgence(Agence $creerAgence): self
-    {
-        if ($this->creerAgence->removeElement($creerAgence)) {
-            // set the owning side to null (unless already changed)
-            if ($creerAgence->getAdminsystem() === $this) {
-                $creerAgence->setAdminsystem(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getCaissierdepot(): Collection
-    {
-        return $this->caissierdepot;
-    }
-
-    public function addCaissierdepot(Compte $caissierdepot): self
-    {
-        if (!$this->caissierdepot->contains($caissierdepot)) {
-            $this->caissierdepot[] = $caissierdepot;
-            $caissierdepot->setUsercaissier($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCaissierdepot(Compte $caissierdepot): self
-    {
-        if ($this->caissierdepot->removeElement($caissierdepot)) {
-            // set the owning side to null (unless already changed)
-            if ($caissierdepot->getUsercaissier() === $this) {
-                $caissierdepot->setUsercaissier(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getUseragence(): Collection
-    {
-        return $this->useragence;
-    }
-
-    public function addUseragence(Compte $useragence): self
-    {
-        if (!$this->useragence->contains($useragence)) {
-            $this->useragence[] = $useragence;
-            $useragence->setUsertransaction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUseragence(Compte $useragence): self
-    {
-        if ($this->useragence->removeElement($useragence)) {
-            // set the owning side to null (unless already changed)
-            if ($useragence->getUsertransaction() === $this) {
-                $useragence->setUsertransaction(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
+     /**
      * @return Collection|Transaction[]
      */
-    public function getTransaction(): Collection
+    public function getTransactions(): Collection
     {
-        return $this->transaction;
+        return $this->transactions;
     }
 
     public function addTransaction(Transaction $transaction): self
     {
-        if (!$this->transaction->contains($transaction)) {
-            $this->transaction[] = $transaction;
-            $transaction->setUsertransaction($this);
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setUserAgenceTransaction($this);
         }
 
         return $this;
@@ -426,10 +327,10 @@ class User implements UserInterface
 
     public function removeTransaction(Transaction $transaction): self
     {
-        if ($this->transaction->removeElement($transaction)) {
+        if ($this->transactions->removeElement($transaction)) {
             // set the owning side to null (unless already changed)
-            if ($transaction->getUsertransaction() === $this) {
-                $transaction->setUsertransaction(null);
+            if ($transaction->getUserAgenceTransaction() === $this) {
+                $transaction->setUserAgenceTransaction(null);
             }
         }
 
@@ -437,33 +338,47 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Agence[]
+     * @return Collection|Compte[]
      */
-    public function getAgence(): Collection
+    public function getComptes(): Collection
     {
-        return $this->agence;
+        return $this->comptes;
     }
 
-    public function addAgence(Agence $agence): self
+    public function addCompte(Compte $compte): self
     {
-        if (!$this->agence->contains($agence)) {
-            $this->agence[] = $agence;
-            $agence->setAdminagence($this);
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes[] = $compte;
+            $compte->setUsers($this);
         }
 
         return $this;
     }
 
-    public function removeAgence(Agence $agence): self
+    public function removeCompte(Compte $compte): self
     {
-        if ($this->agence->removeElement($agence)) {
+        if ($this->comptes->removeElement($compte)) {
             // set the owning side to null (unless already changed)
-            if ($agence->getAdminagence() === $this) {
-                $agence->setAdminagence(null);
+            if ($compte->getUsers() === $this) {
+                $compte->setUsers(null);
             }
         }
 
         return $this;
     }
- 
+
+    public function getAgencePartenaire(): ?Agence
+    {
+        return $this->agencePartenaire;
+    }
+
+    public function setAgencePartenaire(?Agence $agencePartenaire): self
+    {
+        $this->agencePartenaire = $agencePartenaire;
+
+        return $this;
+    }
+
+    
+  
 }

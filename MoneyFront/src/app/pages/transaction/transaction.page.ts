@@ -17,6 +17,7 @@ export class TransactionPage implements OnInit {
   public data: any;
   public columns: any;
   public rows: any;
+  public multi: any;
   constructor(private sharedService: SharedService) {
     this.sharedService.url = '/transactions';
     this.columns = [

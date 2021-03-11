@@ -57,3 +57,239 @@
       </ion-tab-bar>
     </ion-tabs>
   </div>
+  ==============hmtl===========
+  <ion-header>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-auto>
+          <ion-item *ngIf="['userRoleIsCAISSIER || userRoleIsCAISSIER']"  [routerLink]="['/admin']" routerLinkActive="router-link-active">
+            <ion-icon name="home-outline"></ion-icon>
+          </ion-item>
+          <ion-item *ngIf="['userRoleIsADMINAGENCE || userRoleIsUSERAGENCE']"  [routerLink]="['/user']" routerLinkActive="router-link-active">
+            <ion-icon name="home-outline"></ion-icon>
+          </ion-item>
+        </ion-col>
+        <ion-col col-auto>
+          <img src="./assets/images/Logo MONEY SA 1.png" alt=""><br>
+        </ion-col >
+        <ion-col col-auto>
+        </ion-col>
+      </ion-row>
+      </ion-grid>
+  </ion-toolbar>
+  <ion-item>
+    <ion-icon name="arrow-redo-circle-outline" slot="start"></ion-icon>
+    <ion-label>Depot</ion-label>
+  </ion-item>
+</ion-header>
+<ion-content>
+  <ion-segment [(ngModel)]="choix" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="emetteur">
+      <ion-label>Emetteur</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="beneficiaire">
+      <ion-label>Beneficiaire</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+    <form [formGroup]="DepotForm" (ngSubmit)="onSubmit()">
+      <ion-grid [ngSwitch]="choix">
+        <div padding *ngSwitchCase="'beneficiaire'">
+          <ion-row justify-content-center>
+              <div padding>
+                <ion-item>
+                  <ion-label>Nom et Prenom Beneficiaire</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input name="nomCompletBenef" type="text" placeholder="le nom complet Beneficiaire" formControlName="nomCompletBenef"  [(ngModel)]="nomCompletBenef"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Telephone Beneficiaire</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input name="telephoneBenef" type="text" placeholder="telephone Beneficiaire" formControlName="telephoneBenef"  [(ngModel)]="telephoneBenef"></ion-input>
+                </ion-item>
+              </div>
+            <ion-button  type="submit" expand="block">Suivant</ion-button>
+          </ion-row>
+        </div>
+        <div padding *ngSwitchCase="'emetteur'">
+          <ion-row justify-content-center>
+              <div padding>
+                <ion-item>
+                  <ion-label>CNI</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input  name="numeroCni" type="text" placeholder="N° cni emeteur" formControlName="numeroCni"  [(ngModel)]="numeroCni"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Nom et Prenom Emetteur</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input name="nomCompletEmet" type="text" placeholder="le nom complet emeteur" formControlName="nomCompletEmet"  [(ngModel)]="nomCompletEmet"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Telephone</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input name="telephoneEmet" type="text" placeholder="telephone Emeteur" formControlName="telephoneEmet"  [(ngModel)]="telephoneEmet"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Montant</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-input #montantFrais name="montant" type="number" (ionChange)="getFrais(montantFrais.value)" placeholder="Montant envoyer"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Frais</ion-label>
+                  <ion-input [value]="frais" name="frais" type="number" placeholder="0000"></ion-input>
+                  <ion-label>Total</ion-label>
+                  <ion-input [value]="montantTotal" name="montantEnvoye" type="number" placeholder="0000" formControlName="montantEnvoye"  [(ngModel)]="montantEnvoye"></ion-input>
+                </ion-item>
+              </div>
+          </ion-row>
+        </div>
+      </ion-grid>
+    </form>
+</ion-content>
+  ========css======
+  ion-content{
+    color:  #51BFD0;
+}
+ion-header ion-item{
+    text-align: center;
+}
+ion-header ion-toolbar ion-grid ion-row ion-col ion-icon{
+    text-align: center;
+    color: #51BFD0;
+    left: 10px;
+}
+ion-header ion-icon{
+    position: absolute;
+    text-align: center;
+    color: #51BFD0;
+    left: 100px;
+}
+
+img{
+    height: 40px;
+}
+ion-row{
+    text-align: center;
+    border-radius: 10%;
+}
+ion-content ion-label{
+    font-size: 60%;
+}
+ion-content ion-input{
+    font-size: 70%;
+}
+ion-button{
+    --background: #FA4A0C;
+    border-radius: 70px;
+    width: 234px;
+    height: 40px;
+    position: absolute;
+    left: 30px;
+    top: 390px;
+}
+ion-input{
+    width: 100%;
+    left: 3%;
+}
+  ===========ts==============
+  import { FraisService } from './../services/frais.service';
+import { AuthService } from './../services/auth.service';
+import { TransactionsService } from './../services/transactions.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-depot',
+  templateUrl: './depot.page.html',
+  styleUrls: ['./depot.page.scss'],
+})
+export class DepotPage implements OnInit {
+
+  segmentChanged(ev: any) {
+    console.log('Segment changed', ev);
+  }
+
+  choix: string | any;
+  depots : any = [];
+  DepotForm: FormGroup | any;
+  numeroCni: string | any;
+  nomCompletEmet: string | any;
+  telephoneEmet: string | any;
+  nomCompletBenef: string | any;
+  telephoneBenef: string | any;
+  // montant: string | any;
+  montantEnvoye: string | any;
+  // frais: string | any;
+  type: string | any = 'Depot';
+  frais: number;
+  montantTotal:number;
+
+  constructor(
+    private fraisService: FraisService,
+    private transactuinService:TransactionsService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
+    console.log(this.fraisService.getFrais(50000));
+
+   }
+
+   getFrais(montant:number){
+     this.frais = this.fraisService.getFrais(montant);
+     this.montantTotal = Number(this.frais) + Number(montant);
+   }
+
+  ngOnInit() {
+    this.choix = 'emetteur';
+
+    this.DepotForm = this.formBuilder.group({
+      numeroCni: ['', Validators.required],
+      nomCompletEmet: ['', Validators.required],
+      telephoneEmet: ['', Validators.required],
+      nomCompletBenef: ['', Validators.required],
+      telephoneBenef: ['', Validators.required],
+      montantEnvoye: ['', Validators.required],
+      typeTransaction:['Depot'],
+    });
+  }
+
+  onSubmit():void{
+    if (this.DepotForm.invalid){
+      return;
+    }
+    console.log(this.DepotForm.value);
+    this.transactuinService.depot(this.DepotForm.value).subscribe((depot)=>{
+      console.log(depot);
+      this.depots = depot;
+    })
+  }
+}
+===========mts===========
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { IonicModule } from '@ionic/angular';
+
+import { DepotPageRoutingModule } from './depot-routing.module';
+
+import { DepotPage } from './depot.page';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    DepotPageRoutingModule,
+    ReactiveFormsModule,
+  ],
+  declarations: [DepotPage]
+})
+export class DepotPageModule {}

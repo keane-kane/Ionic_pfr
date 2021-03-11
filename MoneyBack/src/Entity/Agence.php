@@ -85,29 +85,25 @@ class Agence
 
     /**
      * @ORM\OneToOne(targetEntity=Compte::class, inversedBy="agence", cascade={"persist", "remove"})
+     * @Groups({"agence:read", "agence:write",
+     *          "users:read"
+     * })
+     * @Groups({"trans:read","trans:write"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"agence:read", "agence:write"})
      */
-    private $appartient;
+    private $compte;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="creerAgence")
-     * @Groups({"agence:read"})
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agencePartenaire")
      */
-    private $adminsystem;
+    private $users;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="agence", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"agence:read", "agence:write"})
-     */
-    private $adminagence;
-
-  
     public function __construct()
     {
-    } 
+        $this->users = new ArrayCollection();
+    }
 
+ 
     public function getId(): ?int
     {
         return $this->id;
@@ -161,40 +157,49 @@ class Agence
         return $this;
     }
 
-    public function getAppartient(): ?Compte
+    public function getCompte(): ?Compte
     {
-        return $this->appartient;
+        return $this->compte;
     }
 
-    public function setAppartient(?Compte $appartient): self
+    public function setCompte(?Compte $compte): self
     {
-        $this->appartient = $appartient;
+        $this->compte = $compte;
 
         return $this;
     }
 
-    public function getAdminsystem(): ?User
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
     {
-        return $this->adminsystem;
+        return $this->users;
     }
 
-    public function setAdminsystem(?User $adminsystem): self
+    public function addUser(User $user): self
     {
-        $this->adminsystem = $adminsystem;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setAgencePartenaire($this);
+        }
 
         return $this;
     }
 
-    public function getAdminagence(): ?User
+    public function removeUser(User $user): self
     {
-        return $this->adminagence;
-    }
-
-    public function setAdminagence(?User $adminagence): self
-    {
-        $this->adminagence = $adminagence;
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getAgencePartenaire() === $this) {
+                $user->setAgencePartenaire(null);
+            }
+        }
 
         return $this;
     }
+
+
+  
 
 }

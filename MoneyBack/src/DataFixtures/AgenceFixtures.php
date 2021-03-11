@@ -12,20 +12,21 @@ class AgenceFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create('fr_FR');
-        ($agence = new Agence())
-            ->setNom('ODC')
-            ->setAdresse($faker->address)
-            ->setArchive(false)
-            ->setPhone($faker->phoneNumber)
-            ->setAppartient($this->getReference('compte'))
-            ->setAdminsystem($this->getReference('ad_sys'))
-            ->setAdminagence($this->getReference('ad_agence'))
-            ;
+    //     $faker = Factory::create('fr_FR');
+    //     ($agence = new Agence())
+    //         ->setNom('ODC')
+    //         ->setAdresse($faker->address)
+    //         ->setArchive(false)
+    //         ->setPhone($faker->phoneNumber)
+    //         ->setCompte($this->getReference('compte'))
+    //         ->setAdminsysteme($this->getReference('ad_sys'))
+    //         ->setAdminagence($this->getReference('ad_agence'))
+    //         ->setCaissier($this->getReference('caissier'))
+    //         ;
 
-        $manager->persist($agence);
-        $this->addReference('agence', $agence);
-        $manager->flush();
+    //     $manager->persist($agence);
+    //     $this->addReference('agence', $agence);
+    //     $manager->flush();
     }
     public function getDependencies()
     {

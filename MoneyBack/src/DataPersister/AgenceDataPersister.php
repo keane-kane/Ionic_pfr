@@ -36,6 +36,7 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
 
     public function supports($data , $contexts = []): bool
     {  
+        
         return $data instanceof Agence;
     
     }
@@ -43,56 +44,53 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, $contexts = [])
     {   
         $lastId = 0;
-        if($this->agenceRepository->getLastId()){
-
-            $lastId = $this->agenceRepository->getLastId()[0]->getId();
-        } 
-        if ($data->getAdminagence()->getPassword()) {
-            $data->getAdminagence()->setPassword(
-                $this->_passwordEncoder->encodePassword(
-                    $data->getAdminagence(),
-                    $data->getAdminagence()->getPassword()
-                )
-            );
-
-            $data->getAdminagence()->eraseCredentials();
-        }
-
-     
-        if(isset($contexts["collection_operation_name"])){
-
-            if(!empty($data->getAppartient())){
-                $montant = $data->getAppartient()->getMontant();
+        if(isset($contexts["collection_operation_name"]) && $contexts["collection_operation_name"] === "post" )
+        {
+           
+            if($this->agenceRepository->getLastId());
+            {
+                $lastId = (int)$this->agenceRepository->getLastId();
+            } 
+            
+            //dd($data);
+            if ($data->getAdminagence()->getPassword()) {
+                $data->getAdminagence()->setPassword(
+                    $this->_passwordEncoder->encodePassword(
+                        $data->getAdminagence(),
+                        $data->getAdminagence()->getPassword()
+                    )
+                );
     
+                $data->getAdminagence()->eraseCredentials();
+            }
+            
+            if(!empty($data->getCompte())){
+                $montant = $data->getCompte()->getMontant();
+                
                 if($montant == null || $montant < 700000 )
                 dd( "le montant ne doit pas être null ou < 700M");
                 
-                $data->getAppartient()->setCode($this->moneyservce->getCodeAgence($lastId+1));
-                $data->getAppartient()->setCreateAt(new \DateTime());
-                $data->setAdminsystem($this->security->getUser());
+                $data->getCompte()->setCode($this->moneyservce->getCodeAgence($lastId+1));
+                $data->getCompte()->setCreateAt(new \DateTime());
+                //$data->getAdminagence()->setProfil("api/profils/3");
+               // $data->setAdminsysteme($this->security->getUser());
                 
-                 dd($data);
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
+                //dd($data);
                 return $data;
             }
 
-        }else if(isset($contexts["item_operation_name"])){
-           $agence = $this->agenceRepository->findOneBy(["id" => $data->getId()]);
-            $montant = $data->getAppartient()->getMontant();
+        }
+        else if(isset($contexts["item_operation_name"]) && $contexts["item_operation_name"] === "PUT" ){
+        //    $agence = $this->agenceRepository->findOneBy(["id" => $data->getId()]);
+        //     $montant = $data->getCompte()->getMontant();
             
-            if($montant == null || $montant < 700000 )
-            dd( "le montant ne doit pas être null ou < 700M");
-            
-            $data->getAppartient()->setCode($data->getAppartient()->getCode());
-            $data->getAppartient()->setCreateAt(new \DateTime());
-            //$data->getAppartient()->setId($data->getAppartient()->getId());
-            $data->setAdminsystem($this->security->getUser());
-            dd($agence);
+            dd('agence');
               $this->entityManager->persist($data);
               $this->entityManager->flush();
               return $data;
-        }
+        } 
         
     }
 
@@ -108,7 +106,7 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
              }
              $this->entityManager->flush();
         }
+         return $data;
             
-        return $data;
     }
 }

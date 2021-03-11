@@ -54,7 +54,9 @@ class TransactionRepository extends ServiceEntityRepository
     public function findByCode($no, $code)
     {
         return $this->createQueryBuilder('t')
-            ->Join('t.clientdepot', 'c')
+            ->select('t')
+            ->addSelect('c')
+            ->Join('t.clientTrans', 'c')
             ->andWhere('t.code = :code')
             ->andWhere('c.phoneBeneficiaire = :no',)
             ->setParameter('no', $no)

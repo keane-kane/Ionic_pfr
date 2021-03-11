@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
@@ -16,7 +17,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
- * normalizationContext   ={"groups"={"client:read"}},
+ *      normalizationContext   ={"groups"={"client:read"}},
+ *      denormalizationContext   ={"groups"={"client:wrie"}},
  *      attributes={
  *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
@@ -53,13 +55,14 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({"client:read", "trans:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"trans:read"})
+     * @Groups({"client:read"})
+     * 
      */
     private $archive = 0;
 
@@ -67,13 +70,14 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du client est obligatoire")
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({"client:read", "client:write", "trans:read","trans:write"})
      */
     private $nomClient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du beneficiaire est obligatoire")
+     * @Groups({"client:read", "client:write"})
      * @Groups({"trans:read","trans:write"})
      */
     private $nomBeneficiaire;
@@ -82,11 +86,13 @@ class Client
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le cni du client est obligatoire")
      * @Groups({"trans:read","trans:write"})
+     * @Groups({"client:read", "client:write"})
      */
     private $cniClient;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"client:read", "client:write"})
      * @Groups({"trans:read","trans:write"})
      */
     private $cniBeneficiaire;
@@ -94,6 +100,7 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du client est obligatoire")
+     * @Groups({"client:read", "client:write"})
      * @Groups({"trans:read","trans:write"})
      */
     private $phoneClient;
@@ -101,24 +108,20 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du beneficiaire est obligatoire")
+     * @Groups({"client:read", "client:write"})
      * @Groups({"trans:read","trans:write"})
      */
     private $phoneBeneficiaire;
 
     /**
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="clientdepot")
+     * @ORM\OneToOne(targetEntity=Transaction::class, mappedBy="clientTrans",  cascade={"persist", "remove"})
+     * @Groups({"trans:read","trans:write"})
      */
-    private $depot;
+    private $transaction;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="clientretrait")
-     */
-    private $retrait;
 
     public function __construct()
     {
-        $this->depot = new ArrayCollection();
-        $this->retrait = new ArrayCollection();
     } 
 
     public function getId(): ?int
@@ -210,63 +213,27 @@ class Client
         return $this;
     }
 
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getDepot(): Collection
+    public function getTransaction(): ?Transaction
     {
-        return $this->depot;
+        return $this->transaction;
     }
 
-    public function addDepot(Transaction $depot): self
+    public function setTransaction(?Transaction $transaction): self
     {
-        if (!$this->depot->contains($depot)) {
-            $this->depot[] = $depot;
-            $depot->setClientdepot($this);
+        // unset the owning side of the relation if necessary
+        if ($transaction === null && $this->transaction !== null) {
+            $this->transaction->setClientTrans(null);
         }
+
+        // set the owning side of the relation if necessary
+        if ($transaction !== null && $transaction->getClientTrans() !== $this) {
+            $transaction->setClientTrans($this);
+        }
+
+        $this->transaction = $transaction;
 
         return $this;
     }
 
-    public function removeDepot(Transaction $depot): self
-    {
-        if ($this->depot->removeElement($depot)) {
-            // set the owning side to null (unless already changed)
-            if ($depot->getClientdepot() === $this) {
-                $depot->setClientdepot(null);
-            }
-        }
 
-        return $this;
-    }
-
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getRetrait(): Collection
-    {
-        return $this->retrait;
-    }
-
-    public function addRetrait(Transaction $retrait): self
-    {
-        if (!$this->retrait->contains($retrait)) {
-            $this->retrait[] = $retrait;
-            $retrait->setClientretrait($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRetrait(Transaction $retrait): self
-    {
-        if ($this->retrait->removeElement($retrait)) {
-            // set the owning side to null (unless already changed)
-            if ($retrait->getClientretrait() === $this) {
-                $retrait->setClientretrait(null);
-            }
-        }
-
-        return $this;
-    }
 }
