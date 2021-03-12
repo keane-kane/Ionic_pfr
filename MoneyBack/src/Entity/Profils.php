@@ -15,39 +15,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilsRepository::class)
- * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
- *      normalizationContext   ={"groups"={"profil:read"}},
- *      denormalizationContext   ={"groups"={"profil:write"}},
- *      attributes={
- *          "force_eager"=false,
- *          "pagination_items_per_page"=30,
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
- *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
- *     },
- *     collectionOperations={
- *          "get"={
- *                "path"="/profils",
- *                "method"="get"
- *              },  
- *           "post"={
- *                "path"="/profils",
- *                "method"="post"
- *              }, 
- *        
- *      },
- *     itemOperations={
- *         "GET"={
- *              "path"="/profils/{id}"
- *            },
- *         "PUT"={
- *             "path"="/profils/{id}"
- *          },
- *        "DELETE"={
- *             "path"="/profils/{id}"
- *          },
- *        
- *  }
+ *      normalizationContext={"groups"={"profil:read"}},
+ *      denormalizationContext={"groups"={"profil:write"}},
+ *       itemOperations={
+ *          "GET",
+ *          "PUT"={"deserialize"=false},
+ *          "DELETE"
+ *      }
  * )
  */
 class Profils
@@ -56,26 +31,26 @@ class Profils
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read","profil:write"})
+     * @Groups({"profil:read" ," users:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","profil:write"})
+     * @Groups({"profil:read","profil:write", "users:read", "users:write"})
      */
     private $libelle;
     
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil", orphanRemoval=true)
      * @ApiSubresource()
-     * @Groups({"profil:read","profil:write"})
+     * @Groups({"profil:read"})
      */
     private $users;
     
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"profil:read","profil:write"})
+     * @Groups({"profil:read","users:read"})
      */
     private $archive = 0; 
     

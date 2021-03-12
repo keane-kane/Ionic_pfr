@@ -3,24 +3,29 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { RouteStateService } from 'src/app/core/services/route-state.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { ToastController } from '@ionic/angular';
+import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  email: string;
-  password: string;
-  showPwd = false;
-  form: any = {password: '', email: ''};
-  msgs: any = {};
 
+  form: { email: string; password: string } = {
+    email: '',
+    password: '',
+  };
+  msgs: any = {};
+  showPwd = false;
+  submitted = false;
   disabledButton;
 
   constructor(
     private routeStateService: RouteStateService,
     private userContextService: UserContextService,
-    private authService: AuthService
+    private authService: AuthService,
+    public toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -30,9 +35,23 @@ export class LoginPage implements OnInit {
     ];
   }
 
-  onSubmit(form) {
-    console.log(form.value);
-    this.authService.login(form.value).subscribe(
+  async presentToast() {
+    const toast = await this.toastController.create({
+      color: 'danger',
+      message: 'numero ou mot de passe incorrect.',
+      duration: 2000,
+      position: 'top',
+    });
+    toast.present();
+  }
+  onSubmit(data: NgForm) {
+    console.log(data.value);
+    this.submitted = true;
+    if (!data.valid){
+        return 0;
+    }
+    // tslint:disable-next-line: deprecation
+    this.authService.login(data.value).subscribe(
       (userData) => {
         const helper = new JwtHelperService();
 
@@ -67,9 +86,10 @@ export class LoginPage implements OnInit {
         }
       },
       (error) => {
-
+        this.presentToast();
         console.log(error);
-      }
+      },
+      () => {}
     );
   }
 

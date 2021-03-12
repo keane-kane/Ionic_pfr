@@ -7,7 +7,7 @@
 </div>
 
 <ion-content color="" padding>
-  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-grid>
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
@@ -18,16 +18,23 @@
               </ion-icon> Email</ion-label
             >
             <ion-input
-              class=""
+              [(ngModel)]="form.email"
+              #email="ngModel"
               type="email"
               size="30"
-              name="email"
-              [(ngModel)]="email"
-              required
               minlength="6"
               name="email"
               email
+              required
             ></ion-input>
+            <ion-text color="danger">
+              <p
+                [hidden]="email.valid || submitted == false"
+                class="ion-margin text-sm"
+              >
+                Email est obligatoire
+              </p>
+            </ion-text>
           </ion-item>
 
           <ion-item class="form-input">
@@ -36,8 +43,10 @@
               password
             </ion-label>
             <ion-input 
-             type="text" *ngIf="showPwd"
-              [(ngModel)]="password" 
+             type="text" 
+             *ngIf="showPwd"
+              [(ngModel)]="form.password" 
+              #password="ngModel"
               name="password"
               required
               minlength="5"
@@ -46,18 +55,28 @@
             <ion-input 
             type="password" 
             *ngIf="!showPwd" 
-            [(ngModel)]="password"
+            [(ngModel)]="form.password" 
+            #password="ngModel"
              name="password"
              required
              minlength="5"
+             password
              >
             </ion-input>
+            <ion-text color="danger">
+              <p
+                [hidden]="form.password || submitted == false"
+                class="ion-margin text-sm"
+              >
+                Mot de passe est obligatoire
+              </p>
+            </ion-text>
             <button icon-only class="ion-button" clear type="button" item-right (click)="showPwd=!showPwd">
               <ion-icon *ngIf="showPwd" name="eye" slot="end"></ion-icon>
               <ion-icon *ngIf="!showPwd" name="eye-off" slot="end"></ion-icon>
             </button>
           </ion-item>
-
+          
           <ion-row >
             <ion-col>
               <ion-button

@@ -1,56 +1,38 @@
 <?php
 
 namespace App\Entity;
+
 use App\Entity\Profils;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
- *      
- *      normalizationContext   ={"groups"={"users:read"}},
- *      denormalizationContext   ={"groups"={"users:write"}},
- *      attributes={
- *          "pagination_items_per_page"=30,
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
- *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
- *      },
+ *      normalizationContext={"groups"={"users:read"}},
  *      collectionOperations={
- *          "get"={
- *                "path"="/users",
- *                "method"="get"
- *              },  
- *           "post"={
- *                "path"="/users",
- *                "method"="post",
- *                "security_post_denormalize"="is_granted('EDIT', object)",
- *              }, 
- *        
+ *          "GET"={},
+ *          "POST"={
+ *              "security_post_denormalize" =
+ *                  "is_granted('ROLE_ADMIN_SYS', object)",
+ *                  "security_message"="Acces refusé vous n'avez pas l'autorisation"
+ *         }
  *      },
- *      itemOperations={
- *         "GET"={
- *              "path"="/users/{id}"
- *            },
- *         "PUT"={
- *             "path"="/users/{id}"
- *          },
- *        "DELETE"={
- *             "path"="/users/{id}"
- *          },
- *        
- *  }
+ *      denormalizationContext={"groups"={"users:write"}},
+ *       itemOperations={
+ *          "GET",
+ *          "DELETE"
+ *      }
  * )
+ *
  */
 class User implements UserInterface
 {
@@ -58,8 +40,12 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read", "users:read"})
-     * @Groups({"agence:read"})
+     * @Groups({
+     *   "trans:read",
+     *   "users:read", 
+     *   "agence:read",
+     *   "profil:read"
+     * })
      */
     private $id;
 
@@ -67,8 +53,13 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email
      * @Assert\NotBlank(message="Le mail est obligatoire")
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *      "users:read", 
+     *      "users:write",
+     *      "profil:read",
+     *      "agence:read",
+     *      "agence:write"
+     * })
      */
     private $email;
 
@@ -79,18 +70,23 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Le password est obligatoire")
-     * @Groups({"trans:read", "users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *     "users:write",
+     *     "agence:write"
+     * })
      */
     private $password;
 
   
     /**
-     * @ORM\ManyToOne(targetEntity=profils::class, inversedBy="users", )
+     * @ORM\ManyToOne(targetEntity=profils::class, inversedBy="users" )
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"profil:read","profil:write"})
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *      "profil:read","trans:read",
+     *      "users:read", "users:write",
+     *      "agence:read", "agence:write"
+     * 
+     * })
      */
     private $profil;
 
@@ -101,49 +97,80 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({
+     *      "profil:read","trans:read",
+     *      "users:read", 
+     *      "agence:read"
+     * 
+     * })
      */
     private $archive = 0; 
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le prenom est obligatoire")
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *      "users:read", "users:write",
+     *      "agence:read", "agence:write",
+     *       "trans:read",  "profil:read"
+     * 
+     * })
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom est obligatoire")
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *      "users:read", "users:write",
+     *      "agence:read", "agence:write",
+     *      "trans:read",  "profil:read"
+     * 
+     * })
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero est obligatoire")
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"agence:read", "agence:write"})
+     * @Groups({
+     *      "users:read", "users:write",
+     *      "agence:read", "agence:write",
+     *      "trans:read",  "profil:read"
+     * 
+     * })
      */
     private $phone;
 
  
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="userAgenceTransaction")
+      * @Groups({
+     *      "users:write", "users:read",
+     *      "agence:read",
+     *      "trans:read"
+     * })
      */
     private $transactions;
 
 
     /**
      * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="users")
+     * @ApiSubresource
+     * @Groups({"users:read", "users:write",
+     *          "trans:read",
+     *          "agence:read"
+     * })
      */
     private $comptes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="users")
-     * @Groups({"users:read", "users:write"})
-     * @Groups({"trans:read","trans:write"})
+     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="users", cascade={"persist"})
+     * @Groups({
+     *          "users:read", "users:write",
+     *          "trans:read",
+     *          "agence:read"
+     * })
      */
     private $agencePartenaire;
 

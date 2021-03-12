@@ -20,7 +20,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *      normalizationContext   ={"groups"={"client:read"}},
  *      denormalizationContext   ={"groups"={"client:wrie"}},
  *      attributes={
- *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
@@ -61,7 +60,7 @@ class Client
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"client:read"})
+     * @Groups({"client:read", "trans:read"})
      * 
      */
     private $archive = 0;
@@ -70,46 +69,59 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du client est obligatoire")
-     * @Groups({"client:read", "client:write", "trans:read","trans:write"})
+     * @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $nomClient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du beneficiaire est obligatoire")
-     * @Groups({"client:read", "client:write"})
-     * @Groups({"trans:read","trans:write"})
+     *  @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $nomBeneficiaire;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le cni du client est obligatoire")
-     * @Groups({"trans:read","trans:write"})
-     * @Groups({"client:read", "client:write"})
+     * @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $cniClient;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"client:read", "client:write"})
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $cniBeneficiaire;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     *  @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du client est obligatoire")
-     * @Groups({"client:read", "client:write"})
-     * @Groups({"trans:read","trans:write"})
+     *   @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $phoneClient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le numero du beneficiaire est obligatoire")
-     * @Groups({"client:read", "client:write"})
-     * @Groups({"trans:read","trans:write"})
+     *   @Groups({
+     *      "client:read", "client:write",
+     *      "trans:read", "trans:write"
+     * })
      */
     private $phoneBeneficiaire;
 

@@ -3,15 +3,15 @@
     align-items: center;
     ion-toolbar {
         img {
-          height: 90% !important;
-          margin-top: 4px;
-          align-items: center;
+          height: 50% !important;
+          width: 60%;
+          margin-top: 15px;
         }
         ion-menu-button{
-            height: 100% !important;
+            height: 30px !important;
             margin-top: 4px;
             align-items: center;
-            font-size: 4em;
+            font-size: 3em;
             color: #f9961e;
         }
     }
@@ -22,6 +22,7 @@ ion-content {
   
     
     ion-card {
+      top: -12%;
       background-color: white;
       border-bottom: 2px solid var(--ion-color-secondary) !important;
       box-shadow: 0 1px 5px rgba(0,0,0,0.25),
@@ -30,7 +31,7 @@ ion-content {
       ion-card-content {
         // font-size: 0.1em;
         padding: 5%;
-        height: 9em;
+        height: 7em;
         ion-card-subtitle {
           font-size: 0.7em;
         }
@@ -70,7 +71,7 @@ ion-content {
         ion-button {
           color: black;
           font-weight: 400;
-          font-size: 16px;
+          font-size: 15px;
         }
       }
     }

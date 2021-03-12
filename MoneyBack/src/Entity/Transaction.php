@@ -20,7 +20,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *      normalizationContext   ={"groups"={"trans:read"}},
  *      denormalizationContext   ={"groups"={"trans:write"}},
  *      attributes={
- *          "pagination_items_per_page"=30,
  *          "security"="is_granted('ROLE_ADMIN_SYS')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
@@ -55,89 +54,144 @@ class Transaction
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read", "user:read",
+     *      "users:write", "compte:read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trans:read","trans:write"})
      * @Assert\NotBlank(message="Le Montant est obligatoire")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $montant;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"trans:read","trans:write"})
+     * @ORM\Column(type="integer")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $frais;
 
   
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $dateDepot;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $dateRetrait;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trans:read","trans:write"})
      * @Assert\NotBlank(message="Le Type est obligatoire")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $type;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $partEtat = 0;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $partTransfert = 0;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $partDepot = 0;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $partRetrait = 0;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"trans:read"})
+     * @Groups({
+     *      "trans:read",
+     *      "users:read",
+     *      "compte:read"
+     * })
      */
     private $archive = 0;
 
     /**
      * @ORM\OneToOne(targetEntity=Client::class, inversedBy="transaction", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trans:read","trans:write"})
-     * @Groups({"client:read", "client:write"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $clientTrans;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions", cascade={"persist", "remove"})
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
      */
     private $userAgenceTransaction;
 
@@ -145,10 +199,31 @@ class Transaction
      * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="transactions")
      * @Groups({
      *      "trans:read", "trans:write",
-     *      "users:read", "users:write"
+     *      "users:read", "users:write",
+     *      "compte:read"
      * })
      */
     private $compte;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
+     */
+    private $codeValide;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({
+     *      "trans:read", "trans:write",
+     *      "users:read", "users:write",
+     *      "compte:read"
+     * })
+     */
+    private $annulertransac;
 
     public function __construct()
     {
@@ -331,6 +406,30 @@ class Transaction
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    public function getCodeValide(): ?bool
+    {
+        return $this->codeValide;
+    }
+
+    public function setCodeValide(bool $codeValide): self
+    {
+        $this->codeValide = $codeValide;
+
+        return $this;
+    }
+
+    public function getAnnulertransac(): ?bool
+    {
+        return $this->annulertransac;
+    }
+
+    public function setAnnulertransac(bool $annulertransac): self
+    {
+        $this->annulertransac = $annulertransac;
 
         return $this;
     }

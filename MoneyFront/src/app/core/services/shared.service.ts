@@ -9,10 +9,35 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class SharedService {
+  constructor(private http: HttpClient) {}
   url = '';
   headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   options = { headers: this.headers };
-  constructor(private http: HttpClient) {}
+
+  tabs: { val: number, m: number[] }[] = [
+      {val: 425, m: [ 0, 5000]},
+      {val: 850,  m: [5000, 10000]},
+      {val: 1270 , m: [10000, 15000]},
+      {val: 1695 , m: [15000, 20000]},
+      {val: 2500 , m: [20000, 50000]},
+      {val: 3000 , m: [50000, 60000]},
+      {val: 4000 , m: [60000, 75000]},
+      {val: 5000 , m: [75000, 120000]},
+      {val: 6000 , m: [120000, 150000]},
+      {val: 7000 , m: [150000, 200000]},
+      {val: 8000 , m: [200000, 250000]},
+      {val: 9000 , m: [250000, 300000]},
+      {val: 12000, m: [300000, 400000]},
+      {val: 15000, m: [400000, 750000]},
+      {val: 22000, m: [750000, 900000]},
+      {val: 25000, m: [900000, 1000000]},
+      {val: 27000, m: [1000000, 1125000]},
+      {val: 30000, m: [1125000, 1400000]},
+      {val: 35000, m: [1400000, 2000000]},
+  ];
+
+
+
 
   getAll(): any {
     return this.http
@@ -75,4 +100,17 @@ export class SharedService {
 
     return throwError('Something bad happened. Please try again later.');
   }
+
+  getFrais(m){
+    if (m >= 2000000){
+      return m * 0.02;
+    }else {
+      for (const tab of this.tabs) {
+        if (m >= tab.m[0] && ++m   <= tab.m[1]) {
+          return tab.val;
+        }
+      }
+    }
+  }
+
 }

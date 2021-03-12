@@ -8,8 +8,10 @@ import { FormGroup } from '@angular/forms';
 })
 export class RetraitPage implements OnInit {
 
-  segment: any;
+
   formGroup: FormGroup;
+  segment = 'emetteur';
+
   constructor() { }
 
   ngOnInit() {

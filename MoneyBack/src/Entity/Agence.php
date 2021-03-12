@@ -9,15 +9,13 @@ use App\Repository\AgenceRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
- * @ApiFilter(BooleanFilter::class, properties={"archive"})
  * @ApiResource(
- *      normalizationContext   ={"groups"={"agence:read"}},
- *      denormalizationContext   ={"groups"={"agence:write"}},
+ *      normalizationContext={"groups"={"agence:read"}},
+ *      denormalizationContext={"groups"={"agence:write"}},
  *      attributes={
  *          "force_eager"=false,
  *          "pagination_items_per_page"=30,
@@ -33,7 +31,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                "path"="/agences",
  *                "method"="post"
  *              }, 
- *        
  *      },
  *     itemOperations={
  *         "GET"={
@@ -55,48 +52,75 @@ class Agence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"agence:read", "compte:read"})
+     * @Groups({
+     *      "agence:read", 
+     *      "compte:read", 
+     *      "users:read",
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"agence:read", "agence:write","compte:read", "compte:write"})
+     * @Groups({
+     *      "agence:read", "agence:write",
+     *      "compte:read", "compte:write",
+     *      "users:read", "users:write",
+     * })
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
+     * @Groups({
+     *      "agence:read", "agence:write",
+     *      "compte:read", "compte:write",
+     *      "users:read", "users:write",
+     * })
      */
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"agence:read", "agence:write", "compte:read", "compte:write"})
+     * @ORM\Column(type="integer")
+     * @Groups({
+     *      "agence:read", "agence:write",
+     *      "compte:read", "compte:write",
+     *      "users:read", "users:write",
+     * })
      */
     private $phone;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"agence:read"})
+   * @Groups({
+     *      "agence:read",
+     *      "compte:read", 
+     *      "users:read", 
+     * })
      */
     private $archive = 0;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Compte::class, inversedBy="agence", cascade={"persist", "remove"})
-     * @Groups({"agence:read", "agence:write",
-     *          "users:read"
-     * })
-     * @Groups({"trans:read","trans:write"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $compte;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agencePartenaire")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agencePartenaire", cascade={"persist", "remove"})
+     * @Groups({
+     *      "agence:read", "agence:write",
+     *      "compte:read", "compte:write",
+     *      "users:read", "users:write",
+     *      "trans:read","trans:write",
+     * })
      */
     private $users;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
+     *
+     * @Groups({
+     *      "agence:read", "agence:write",
+     *      "users:read"
+     * })
+     */
+    private $compte;
 
     public function __construct()
     {
@@ -157,17 +181,7 @@ class Agence
         return $this;
     }
 
-    public function getCompte(): ?Compte
-    {
-        return $this->compte;
-    }
 
-    public function setCompte(?Compte $compte): self
-    {
-        $this->compte = $compte;
-
-        return $this;
-    }
 
     /**
      * @return Collection|User[]
@@ -195,6 +209,18 @@ class Agence
                 $user->setAgencePartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
 
         return $this;
     }

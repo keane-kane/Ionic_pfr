@@ -40,5 +40,24 @@ final class MoneyServices{
 
     }
 
-
+    // setter dynamique 
+    public function setterDynamic($data, $u)
+    {
+        if (is_array($data) || is_object($data)) {
+            foreach ($data as $key => $value) {
+                $setter = 'set' . ucfirst(strtolower($key));
+                if (method_exists($u, $setter)) {
+                    if ($key == 'profil') {
+                        $profile = $data['profil'];
+                        // dd($profile->getLibelle());
+                        $u->$setter($profile);
+                    } elseif ($key == 'password') {
+                    } else {
+                        $u->$setter($value);
+                    }
+                }
+            }
+        }
+        return $u;
+    }
 }

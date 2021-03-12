@@ -44,40 +44,41 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, $contexts = [])
     {   
         $lastId = 0;
-        if(isset($contexts["collection_operation_name"]) && $contexts["collection_operation_name"] === "post" )
+        if((isset($contexts["collection_operation_name"]) ?? null ) === "post" )
         {
-           
+            
             if($this->agenceRepository->getLastId());
             {
                 $lastId = (int)$this->agenceRepository->getLastId();
             } 
+            dd('posr');
             
-            //dd($data);
-            if ($data->getAdminagence()->getPassword()) {
-                $data->getAdminagence()->setPassword(
+            if ($data->getUsers()[0]->getPassword()) {
+                $data->getUsers()[0]->setPassword(
                     $this->_passwordEncoder->encodePassword(
-                        $data->getAdminagence(),
-                        $data->getAdminagence()->getPassword()
-                    )
-                );
-    
-                $data->getAdminagence()->eraseCredentials();
-            }
-            
-            if(!empty($data->getCompte())){
-                $montant = $data->getCompte()->getMontant();
-                
-                if($montant == null || $montant < 700000 )
-                dd( "le montant ne doit pas être null ou < 700M");
-                
-                $data->getCompte()->setCode($this->moneyservce->getCodeAgence($lastId+1));
-                $data->getCompte()->setCreateAt(new \DateTime());
-                //$data->getAdminagence()->setProfil("api/profils/3");
-               // $data->setAdminsysteme($this->security->getUser());
-                
-                $this->entityManager->persist($data);
-                $this->entityManager->flush();
-                //dd($data);
+                        $data->getUsers()[0],
+                        $data->getUsers()[0]->getPassword()
+                        )
+                    );
+                    
+                    $data->getUsers()[0]->eraseCredentials();
+                }
+                if(!empty($data->getCompte())){
+                    $montant = $data->getCompte()->getMontant();
+                    
+                    if($montant == null || $montant < 700000 )
+                    dd( "le montant ne doit pas être null ou < 700M");
+                    //dd($data);
+                    
+                    $data->getCompte()->setCode($this->moneyservce->getCodeAgence($lastId+1));
+                    $data->getCompte()->setCreateAt(new \DateTime());
+                    //$data->getAdminagence()->setProfil("api/profils/3");
+                    // $data->setAdminsysteme($this->security->getUser());
+                   // dd($data);
+                    
+                    $this->entityManager->persist($data);
+                    $this->entityManager->flush();
+                    
                 return $data;
             }
 

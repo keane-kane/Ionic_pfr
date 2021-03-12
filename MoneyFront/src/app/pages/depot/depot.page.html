@@ -3,15 +3,21 @@
   <div class="header">
     <ion-toolbar>
       <ion-row justify-content-center>
-        <ion-col size="5">
+        <ion-col size="4">
           <button icon-only class="ion-button" clear type="button"  routerLink="/accueil" >
             <ion-icon name="home"></ion-icon>
           </button>
+          <!-- <ion-item *ngIf="['userRoleIsCAISSIER || userRoleIsCAISSIER']"  [routerLink]="['/admin']" routerLinkActive="router-link-active">
+            <ion-icon name="home-outline"></ion-icon>
+          </ion-item>
+          <ion-item *ngIf="['userRoleIsADMINAGENCE || userRoleIsUSERAGENCE']"  [routerLink]="['/user']" routerLinkActive="router-link-active">
+            <ion-icon name="home-outline"></ion-icon>
+          </ion-item> -->
         </ion-col>
         <ion-col>
 
           <ion-avatar>
-            <img src="../../assets/images/savem.png">
+            <img src="../../assets/images/logoSaMoney.png">
           </ion-avatar>
       
         </ion-col>
@@ -31,95 +37,95 @@
 
 
   <div class="contenu">
-    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)" value="emetteur">
 
-  <ion-segment-button value="emetteur">
-    <ion-label>Emetteur</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="beneficiaire">
-    <ion-label>Bénéficiaire</ion-label>
-  </ion-segment-button>
-</ion-segment>
-    <div [ngSwitch]="segment">
-      <div *ngSwitchCase="'emetteur'">
+    <ion-segment name="segment" [(ngModel)]="segment" color="tertiary" (ionChange)="segmentChanged($event)">
 
-        <ion-item>
-          <ion-label position="stacked">
-            N CNI
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Nom
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Prénom
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Téléphone
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Montant
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Frais
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Total
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
+      <ion-segment-button value="emetteur">
+        Emetteur
+      </ion-segment-button>
+      <ion-segment-button value="beneficiaire">
+        Bénéficiaire
+      </ion-segment-button>
+
+    </ion-segment>
+
+    <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div>
+        <div *ngIf="segment === 'emetteur'">
+
+          <div formGroupName="clientTrans">
+            <ion-item>
+              <ion-label position="stacked">
+                N CNI
+              </ion-label>
+              <ion-input type="number" pattern="[0-9]{11}" formControlName="cniClient"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">
+                Nom
+              </ion-label>
+              <ion-input type="text" formControlName="nomClient"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">
+                Téléphone
+              </ion-label>
+              <ion-input type="number" pattern="[0-9]{9}" formControlName="phoneClient"></ion-input>
+            </ion-item>
+
+          </div>
+          <ion-item>
+            <ion-label position="stacked">
+              Montant
+            </ion-label>
+            <ion-input #montantFrais type="number"   name="montantTotal"  (ionChange)="getFrais(montantFrais.value)"></ion-input>
+          </ion-item>
+          <ion-item class="frais-item">
+            <ion-label position="stacked">
+              Frais
+            </ion-label>
+            <ion-input  [disabled]="true" class="frais" [value]="frais" name="frais" type="number" formControlName="frais" placeholder="0000"></ion-input>
+          </ion-item>
+          <ion-item class="total-item">
+            <ion-label position="stacked">
+              Total
+            </ion-label>
+            <ion-input [disabled]="true"  type="text" [value]="montantTotal" name="montant" placeholder="0000" formControlName="montant"  [(ngModel)]="montantTotal"></ion-input>
+          </ion-item>
+        </div>
+
+
+        <!-- Beneficiaire -->
+        <div *ngIf="segment === 'beneficiaire'">
+
+          <div formGroupName="clientTrans">
+            <ion-item>
+              <ion-label position="stacked">
+                Nom
+              </ion-label>
+              <ion-input type="text" formControlName="nomBeneficiaire"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">
+                Téléphone
+              </ion-label>
+              <ion-input type="number" pattern="[0-9]{9}" formControlName="phoneBeneficiaire"></ion-input>
+            </ion-item>
+          </div>
+
+
+        </div>
+
+
       </div>
 
+      <br>
+      <ion-button type="submit" [disabled]="form.invalid" expand="block" slot="bottom" color="" shape="round">
+        Suivant
+      </ion-button>
 
-      <!-- Beneficiaire -->
-      <div *ngSwitchCase="'beneficiaire'">
-
-        <ion-item>
-          <ion-label position="stacked">
-            Nom
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Prénom
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            Téléphone
-          </ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-
-
-
-      </div>
-
-
-    </div>
-
-    <br>
-    <ion-button expand="block" slot="bottom" color="" shape="round">
-      Suivant
-    </ion-button>
+    </form>
   </div>
 </ion-content>

@@ -56,7 +56,11 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({ "compte:read", "agence:read",  "agence:write"})
+     * @Groups({
+     *      "compte:read", "agence:read",
+     *      "trans:read",
+     *      "user:read",
+     * })
      */
     private $id;
 
@@ -64,10 +68,10 @@ class Compte
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le code est obligatoire")
      * @Groups({
-     *      "compte:read", "compte:write",
-     *      "agence:read", "agence:write",
-     *      "trans:read", "trans:write",
-     *      "users:read", "users:write"
+     *      "compte:read",
+     *      "agence:read", 
+     *      "trans:read",
+     *      "users:read", 
      * })
      */
     private $code;
@@ -89,7 +93,12 @@ class Compte
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"compte:read", "agence:read"})
+   * @Groups({
+     *      "compte:read", 
+     *      "agence:read",
+     *      "trans:read", 
+     *      "users:read", "users:write"
+     * })
      */
     private $createAt;
 
@@ -100,21 +109,22 @@ class Compte
     private $archive = 0;
     
     /**
-     * @ORM\OneToOne(targetEntity=Agence::class, mappedBy="compte", cascade={"persist", "remove"})
-     */
-    private $agence;
-
-    /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte")
      * @Groups({
      *      "compte:read", "compte:write",
      *      "agence:read","trans:read",
+     *      "users:read", "users:write"
      * })
      */
     private $transactions;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comptes")
+     * @Groups({
+     *      "compte:read", "compte:write",
+     *      "agence:read","trans:read",
+     *      "users:read"
+     * })
      */
     private $users;
 
