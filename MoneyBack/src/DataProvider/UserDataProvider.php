@@ -26,7 +26,14 @@ final class UserDataProvider implements ContextAwareCollectionDataProviderInterf
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])
     {
         // Retrieve the blog post item from somewhere then return it or null if not found
-        return $this->userRepository->findOneBy(['archive' => false, 'id' => $id]);
+        if( $id != 0){
+            $data = $this->userRepository->findOneBy(['archive' => false, 'id' => $id]);
+           return $data;
+      }
+        elseif(($context["item_operation_name"] ?? null) == "GET")
+        $id = explode("/",$context["request_uri"])[3];
+       // dd($id);
+        return $this->userRepository->findOneBy(['archive' => false, 'email' => $id]);
     }
 
     public function getCollection(string $resourceClass, ?string $operationName = null, array $context = [])

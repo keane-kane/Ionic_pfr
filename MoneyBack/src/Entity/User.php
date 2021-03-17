@@ -28,7 +28,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *      },
  *      denormalizationContext={"groups"={"users:write"}},
  *       itemOperations={
- *          "GET",
+ *          "GET"={
+ *                "path"="/users/{id}"
+ *          },
  *          "DELETE"
  *      }
  * )
@@ -168,8 +170,8 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="users", cascade={"persist"})
      * @Groups({
      *          "users:read", "users:write",
-     *          "trans:read",
-     *          "agence:read"
+     *          "trans:read","trans:write",
+     *          "agence:read""agence:write"
      * })
      */
     private $agencePartenaire;
@@ -314,33 +316,6 @@ class User implements UserInterface
         return $this;
     }
     
-    /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-    
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        $this->plainPassword = null;
-    }
-
-     /**
-     * @return Collection|Transaction[]
-     */
-    public function getTransactions(): Collection
-    {
-        return $this->transactions;
-    }
 
     public function addTransaction(Transaction $transaction): self
     {
@@ -406,6 +381,32 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
     
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
+    }
+
+     /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
   
 }

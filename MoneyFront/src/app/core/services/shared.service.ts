@@ -57,8 +57,8 @@ export class SharedService {
       );
   }
 
-  getById(id: number): any {
-    return this.http.get(`${environment.apiUrl}${this.url}/${id}`, {
+  getById(value: number | string): any {
+    return this.http.get(`${environment.apiUrl}${this.url}/${value}`, {
       headers: { Accept: 'application/json' },
     });
   }
@@ -72,15 +72,24 @@ export class SharedService {
   update(data: any, id: number): any {
     return this.http
       .put(`${environment.apiUrl}${this.url}/${id}`, data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { Accept: 'application/json' },
       })
       .pipe(catchError(this.handleError));
   }
 
   delete(id: number): any {
     return this.http
-      .delete(`${environment.apiUrl}${this.url}/${id}`)
+      .delete(`${environment.apiUrl}${this.url}/${id}`, {
+        headers: { Accept: 'application/json' },
+      })
       .pipe(catchError(this.handleError));
+  }
+
+  // get client retrait
+  getCLientR(code: string){
+    return this.http
+    .get(`${environment.apiUrl}${this.url}/${code}`)
+    .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): any {

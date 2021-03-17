@@ -5,6 +5,7 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
+import { SessionService } from '../../core/services/session.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -25,7 +26,7 @@ export class LoginPage implements OnInit {
     private routeStateService: RouteStateService,
     private userContextService: UserContextService,
     private authService: AuthService,
-    public toastController: ToastController
+    public toastController: ToastController,
   ) {}
 
   ngOnInit() {

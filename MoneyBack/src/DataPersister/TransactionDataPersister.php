@@ -59,8 +59,6 @@ class TransactionDataPersister implements  ContextAwareDataPersisterInterface
                     ->setCode($this->moneyservice->getCodetransaction($data->getClientTrans()->getCniClient()))
                     ->setUserAgenceTransaction($this->_security->getUser())
                     ->setDateDepot(new \DateTime())
-                    ->setCodeValide(false)
-                    ->setAnnulertransac(false)
                     ;
                 //update compte usercurrent et verification du montant
                 
@@ -79,40 +77,55 @@ class TransactionDataPersister implements  ContextAwareDataPersisterInterface
                 $phoneClient = $data->getClientTrans()->getPhoneBeneficiaire();
                 $clientRetrait = $this->transripo->findByCode($phoneClient, $codeRetrait);
                 
-                //dd($clientRetrait);
+              // dd($clientRetrait);
                 if(!empty($clientRetrait))
                 {
                     $clientRetrait = $clientRetrait[0];
                     if(!$clientRetrait->getCodeValide() && $curentuser->getMontant() == $data->getMontant())
-                    $clientRetrait->setCodeValide(true);
+                    
+                    $this->_entityManager->flush();
                     $partRetrait = $clientRetrait->getPartRetrait();
                     $data
                          ->setPartRetrait($partRetrait)
-                         ->setCodeValide(true)
-                         ->setAnnulertransac(false)
                          ->setUserAgenceTransaction($this->_security->getUser())
                          ->setDateDepot($clientRetrait->getDateDepot())
                          ->setDateRetrait(new \DateTime());
 
                     $curentuser->setMontant($curentuser->getMontant() + $clientRetrait->getMontant() + $partRetrait );
-                    
+                    $this->_entityManager->persist($data);
+                    $this->_entityManager->flush();
                 }else{
                   
-                    dd("errror de retrait");
+                    dd("code invalide");
                 }
     
             }
-            //dd($data);
-            $this->_entityManager->persist($data);
+            
+            $clientRetrait->setCodeValide(true);
             $this->_entityManager->flush();
+           // dd($clientRetrait);
             return $data;
             
         }
-        else
+        else if ((($context['item_operation_name']) ?? null) === 'PUT')
             {
-                if($data->getType() == "depot" &&  !$data->getCodeValide())
+                if($data->getType() == "depot" && $data->getAnnulertransac() )
                 {
+                    //dd($data);
+                    $montantDepot = $data->getMontant() + $data->getFrais();
+                    $accountUserMadeDepot = $data->getUserAgenceTransaction()->getAgencePartenaire()->getCompte();
+                    $accountUserMadeDepot->setMontant($data->getMontant() + $accountUserMadeDepot->getMontant());
+                    $data->setAnnulertransac(true);
+                    $data->setCodeValide(true)
+                    
+                    ->setDateRetrait(new \DateTime());
 
+                   dd($data);
+    
+                    $this->_entityManager->flush();
+                    return $data;
+                }else{
+                    dd("Operations inconnue pour cet endpoint");
                 }
             }
     //    // dd($this->security->getUser()->getAgencePartenaire()->getCompte()->getMontant());

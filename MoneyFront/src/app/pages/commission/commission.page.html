@@ -1,9 +1,88 @@
+
 <ion-header>
-  <ion-toolbar>
-    <ion-title>commission</ion-title>
-  </ion-toolbar>
+  <div class="header">
+    <ion-toolbar>
+      <ion-row justify-content-center>
+        <ion-col size="4">
+          <button icon-only class="ion-button" clear type="button"  routerLink="/accueil" >
+            <ion-icon name="home"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col>
+
+          <ion-avatar>
+            <img src="../../assets/images/logoSaMoney.png">
+          </ion-avatar>
+      
+        </ion-col>
+      </ion-row>
+      <ion-row class="justify-content-center">
+        <ion-col size="7" >
+          <span>
+            <ion-icon color="secondary" slot="start" name="log-in-outline"></ion-icon>
+            <ion-text color="secondary">Commission</ion-text>
+          </span>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </div>
 </ion-header>
-
 <ion-content>
+  <div>
+    <div class="ion-margin-bottom">
+      <ion-row>
+        <ion-col>
+          <div><h2>Type</h2></div>
+        </ion-col>
+        <ion-col>
+          <div><h2>Du</h2></div>
+        </ion-col>
+        <ion-col>
+          <div><h2>Au</h2></div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-row>
+      <ion-col>
+        <div><h6>Date</h6></div>
+      </ion-col>
+      <ion-col>
+        <div><h6>Type</h6></div>
+      </ion-col>
+      <ion-col>
+        <div><h6>Montant</h6></div>
+      </ion-col>
+    </ion-row>
+    <!--commision-->
+    <ion-row *ngFor="let commission of commissions; let i=index">
+      <ion-col>
+        <ng-container *ngIf="commission.type == 'depot'; else elseTemplat">
+          <h6>{{commission.dateDepot|date:'shortDate'}}</h6>
+        </ng-container>
+        <ng-template #elseTemplat>
+          <span *ngIf="!commission.dateRtrait"> pas encore retirer</span>
+          <h6>{{commission.dateRtrait|date:'shortDate'}}</h6>
+        </ng-template>
+      </ion-col>
+      <ion-col>
+        <ng-container *ngIf="commission.type == 'depot'; else elseTemplate">
+          <h6>Depot</h6>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <h6>Retrait</h6>
+        </ng-template>
+      </ion-col>
+      <ion-col>
+        <div><h6>{{commission.montant}}</h6></div>
+      </ion-col>
+    
+    </ion-row>
+    <div><h6>Total {{total}}</h6></div>
+  </div>
 
+
+  <!-- <span>
+
+  </span> -->
+  <!-- <ion-nav [root]="rootPage1"></ion-nav> -->
 </ion-content>

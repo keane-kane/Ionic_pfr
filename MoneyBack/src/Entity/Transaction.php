@@ -38,6 +38,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *         "GET"={
  *              "path"="/transactions/{id}"
  *            },
+ *          "get_client"={
+ *              "path"="/transactions/{code}",
+ *               "method"="get",
+ *               "controller"=App\Controller\TransactionController::class
+ *            },
  *         "PUT"={
  *             "path"="/transactions/{id}"
  *          },
@@ -180,7 +185,8 @@ class Transaction
      * @Groups({
      *      "trans:read", "trans:write",
      *      "users:read", "users:write",
-     *      "compte:read"
+     *      "compte:read",
+     *      "client:read", "client:write",
      * })
      */
     private $clientTrans;
@@ -213,7 +219,7 @@ class Transaction
      *      "compte:read"
      * })
      */
-    private $codeValide;
+    private $codeValide = 0;
 
     /**
      * @ORM\Column(type="boolean")
@@ -223,7 +229,7 @@ class Transaction
      *      "compte:read"
      * })
      */
-    private $annulertransac;
+    private $annulertransac = 0;
 
     public function __construct()
     {

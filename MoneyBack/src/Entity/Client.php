@@ -54,13 +54,19 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"client:read", "trans:read"})
+     * @Groups({
+     *          "trans:read", "trans:write",
+     *          "client:read", "client:write"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"client:read", "trans:read"})
+     * @Groups({
+     *           "trans:read", "trans:write",
+     *           "client:read", "client:write"
+     * })
      * 
      */
     private $archive = 0;
@@ -127,7 +133,11 @@ class Client
 
     /**
      * @ORM\OneToOne(targetEntity=Transaction::class, mappedBy="clientTrans",  cascade={"persist", "remove"})
-     * @Groups({"trans:read","trans:write"})
+     * @Groups({
+     *      "trans:read","trans:write",
+     *      "client:read", "client:write",
+     * 
+     * })
      */
     private $transaction;
 

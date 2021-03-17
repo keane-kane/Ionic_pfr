@@ -6,6 +6,7 @@ import { SessionService } from 'src/app/core/services/session.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { SidemenuPage } from '../sidemenu/sidemenu.page';
 import { TabsPage } from '../tabs/tabs.page';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-accueil',
@@ -15,13 +16,15 @@ import { TabsPage } from '../tabs/tabs.page';
 export class AccueilPage implements OnInit {
 
   rootPage: any = TabsPage;
-
+  montant: any;
+  dateString: string;
   constructor(
     platform: Platform,
     private router: Router,
     private routeStateService: RouteStateService,
     private sessionService: SessionService,
     private userContextService: UserContextService,
+    private sharedService: SharedService,
     ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -31,13 +34,34 @@ export class AccueilPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('vieve');
+    this.sharedService.url = '/users';
+    const { username } =  this.sessionService.getItem('currentUser');
+    this.sharedService.getById(username).subscribe(
+      res => {
+           this.montant = new Intl.NumberFormat().format(res.agencePartenaire.compte.montant);
+           console.log(this.montant);
+      });
+    this.dateString = this.formattedDate();
   }
   logOut(){
     this.routeStateService.removeAll();
     this.userContextService.logout();
     this.sessionService.removeItem('active-menu');
     this.router.navigate(['/login']);
+  }
+ 
+  formattedDate() {
+    const m = new Date();
+    const dateString =
+    m.getUTCFullYear() + '/' +
+    ('0' + (m.getUTCMonth() + 1)).slice(-2) + '/' +
+    ('0' + m.getUTCDate()).slice(-2) + ' ' +
+    ('0' + m.getUTCHours()).slice(-2) + ':' +
+    ('0' + m.getUTCMinutes()).slice(-2)
+    ;
+    console.log(dateString);
+    return dateString;
+    // ('0' + m.getUTCSeconds()).slice(-2)
   }
 
 }

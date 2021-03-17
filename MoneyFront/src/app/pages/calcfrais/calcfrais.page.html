@@ -3,7 +3,7 @@
   <div class="header">
     <ion-toolbar>
       <ion-row justify-content-center>
-        <ion-col size="5">
+        <ion-col size="4">
           <button icon-only class="ion-button" clear type="button"  routerLink="/accueil" >
             <ion-icon name="home"></ion-icon>
           </button>
@@ -11,7 +11,7 @@
         <ion-col>
 
           <ion-avatar>
-            <img src="../../assets/images/savem.png">
+            <img src="../../assets/images/logoSaMoney.png">
           </ion-avatar>
       
         </ion-col>
@@ -28,11 +28,8 @@
   </div>
 </ion-header>
 <ion-content>
-  <div class="entete">
-    <div class="logo">
-      <img src="../../assets/logo.png" alt="">
-    </div>
 
+  <div class="entete">
     <div class="t-login">
       <span>
         <ion-icon color="secondary" slot="start" name="calculator-sharp"></ion-icon>
@@ -42,27 +39,44 @@
   </div>
 
   <div class="contenu">
-    <ion-item>
-      <ion-label position="stacked"> Type de Transaction </ion-label>
-      <ion-select placeholder="Select">
-        <ion-select-option value="depot">Dépôt</ion-select-option>
-        <ion-select-option value="retrait">Retrait</ion-select-option>
-      </ion-select>
-
-
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">
-        Montant
-      </ion-label>
-      <ion-input type="text"> </ion-input>
-    </ion-item>
-
-    <br>
-    <ion-button item-end color="" shape="round">
-      Calculer
-    </ion-button>
+    <form class="" #frais="ngForm" class="ion-margin" (ngSubmit)="onSubmit(frais)">
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating" color="dark-shade">Type</ion-label>
+          <ion-select
+            interface="popover"
+             value="depot"
+              name="type"
+             [(ngModel)]="fraisForm.type"
+             #type="ngModel"
+             required
+             >
+            <ion-select-option value="depot">Depot </ion-select-option>
+            <ion-select-option value="retrait">Retrait</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating" color="dark-shade">Montant</ion-label>
+          <ion-input
+            [(ngModel)]="fraisForm.montant"
+            #montant="ngModel"
+            name="montant"
+            min="1"
+            type="number"
+            required
+          >
+          </ion-input>
+        </ion-item>
+      </ion-list>
+  
+      <ion-button
+        class="ion-margin"
+        color=""
+        expand="full"
+        type="submit"
+        >calculer</ion-button
+      >
+    </form>
 
   </div>
 </ion-content>

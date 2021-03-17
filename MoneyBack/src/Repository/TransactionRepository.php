@@ -51,14 +51,16 @@ class TransactionRepository extends ServiceEntityRepository
      * @return Transaction[] Returns an array of Transaction objects
      */
   
-    public function findByCode($no, $code)
+    public function findByCode($no, $code): ?Transaction
     {
         return $this->createQueryBuilder('t')
             ->select('t')
             ->addSelect('c')
             ->Join('t.clientTrans', 'c')
             ->andWhere('t.code = :code')
-            ->andWhere('c.phoneBeneficiaire = :no',)
+            ->andWhere('t.codeValide = false')
+            ->andWhere('t.annulertransac = false')
+            ->orWhere('c.phoneBeneficiaire = :no',)
             ->setParameter('no', $no)
             ->setParameter('code', $code)
             ->orderBy('t.id', 'DESC')
@@ -68,4 +70,19 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
     
+    public function findOneByIdOrCode($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.code = :val')
+            ->orWhere('t.id=:val')
+            ->andWhere('t.archive = :false')
+            ->andWhere('t.annulertransac = :false')
+            ->setParameter('val', $value)
+            ->setParameter('false', false)
+            ->setParameter('false', false)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

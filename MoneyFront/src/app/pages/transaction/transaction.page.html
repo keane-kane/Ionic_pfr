@@ -3,7 +3,7 @@
   <div class="header">
     <ion-toolbar>
       <ion-row justify-content-center>
-        <ion-col size="5">
+        <ion-col size="4">
           <button icon-only class="ion-button" clear type="button"  routerLink="/accueil" >
             <ion-icon name="home"></ion-icon>
           </button>
@@ -11,7 +11,7 @@
         <ion-col>
 
           <ion-avatar>
-            <img src="../../assets/images/savem.png">
+            <img src="../../assets/images/logoSaMoney.png">
           </ion-avatar>
       
         </ion-col>
@@ -19,8 +19,8 @@
       <ion-row class="justify-content-center">
         <ion-col size="7" >
           <span>
-            <ion-icon color="secondary" slot="start" name="return-up-forward-outline"></ion-icon>
-            <ion-text color="secondary">Dépôt</ion-text>
+            <ion-icon color="secondary" slot="start" name="sync-outline"></ion-icon>
+            <ion-text color="secondary">Transaction</ion-text>
           </span>
         </ion-col>
       </ion-row>
@@ -41,7 +41,22 @@
     <ion-label>Toutes les transactions</ion-label>
   </ion-segment-button>
 </ion-segment>
-
+<div>
+<ion-row>
+  <ion-col>
+    <div><h4>Users</h4></div>
+  </ion-col>
+  <ion-col>
+    <div><h4>Type</h4></div>
+  </ion-col>
+  <ion-col>
+    <div><h4>Du</h4></div>
+  </ion-col>
+  <ion-col>
+    <div><h4>Au</h4></div>
+  </ion-col>
+</ion-row>
+</div>
     <div [ngSwitch]="segment">
       <div *ngSwitchCase="'mestransaction'">
 
@@ -66,17 +81,9 @@
       <!-- Beneficiaire -->
       <div *ngSwitchCase="'toutmestransaction'">
 
- 
       </div>
-
-
     </div>
-
-    <br>
-    <ion-button expand="block" slot="bottom" color="" shape="round">
-      Suivant
-    </ion-button>
   </div>
+  <ion-nav [root]="rootPage2"></ion-nav>
+  <app-sidemenu></app-sidemenu>
 </ion-content>
-<!-- <ion-nav [root]="rootPage"></ion-nav> -->
-<app-sidemenu></app-sidemenu>

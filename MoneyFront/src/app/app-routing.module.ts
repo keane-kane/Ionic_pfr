@@ -9,11 +9,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
-  {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
@@ -71,6 +66,11 @@ const routes: Routes = [
     path: 'error',
     component: PageNotFoundComponent,
     // loadChildren: () => import('src/app/shared/error/error.module').then(m => m.ErrorModule)
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
   {
     path: '**',

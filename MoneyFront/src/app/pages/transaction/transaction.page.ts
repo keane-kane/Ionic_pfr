@@ -11,8 +11,8 @@ import { TabsPage } from '../tabs/tabs.page';
   encapsulation: ViewEncapsulation.None
 })
 export class TransactionPage implements OnInit {
-  // rootPage: any = TabsPage;
-  segment: any;
+  rootPage2: any = TabsPage;
+  segment = 'mestransaction';
   transac = [];
   public data: any;
   public columns: any;

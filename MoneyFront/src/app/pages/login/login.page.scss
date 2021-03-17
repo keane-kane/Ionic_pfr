@@ -6,12 +6,16 @@ $colors: (
  dark:       #222,
  newColor:   #000000,
 );
+header{
+    background-color: #000000;
+}
 
 .tolbarimg{
     background-repeat: no-repeat;
     background-size: cover;
-    height: 18em;
+    height: 15em;
     width: 100%;
+    margin: 0;
 }
 
 ion-grid{
@@ -52,8 +56,8 @@ h1{
     position: absolute;
     color: #f9961e,;
     float: right;
-    top: 38%;
-    right: 18%;
+    top: 8.5em;
+    right: 5%;
     z-index: 22222222222222;
     text-decoration: underline;
 }
@@ -120,15 +124,18 @@ ion-input:focus{
     outline: none;
   }
 
+ion-text{
+    font-size: 10px;
+}  
 
-:host {
-    .item-interactive.ion-invalid{
-     --highlight-background: yellow !important;
-   }
-   .item-interactive.ion-valid{
-     --highlight-background: black !important;
-   }
- }
+// :host {
+//     .item-interactive.ion-invalid{
+//      --highlight-background: yellow !important;
+//    }
+//    .item-interactive.ion-valid{
+//      --highlight-background: black !important;
+//    }
+//  }
  .item-interactive{
     --border-color: var(--ion-color-danger, #f1453d);
     --highlight-color-focused: red;

@@ -1,39 +1,3 @@
-ion-content {
-  .entete {
-    height: 30%;
-    background-color: white;
-    box-shadow: 0px 5px 10px -10px #aaa;
-    border-radius: 0 0 25px 25px;
-
-    // margin-bottom: 2em;
-  }
-
-  .logo {
-    position: relative;
-    height: 86%;
-  }
-
-  .entete img {
-    width: 25%;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .t-login {
-    text-align: center;
-    padding-bottom: 0.5em;
-    span {
-      border-bottom: 2px solid var(--ion-color-secondary);
-      padding-bottom: 0.5em;
-    }
-  }
-
-  .contenu {
-    padding: 9%;
-  }
-}
 ion-header {
   background-color: #f9961e;
   ion-toolbar {
@@ -58,18 +22,6 @@ ion-header {
     }
   }
 }
-.ion-button{
-  position: relative;
-  top: 2em;
-  background:#fff;
-  ion-icon{
-    color:  #f9961e;
-  }
-}
-
-
-
-
 
 
 ion-content{
@@ -79,9 +31,23 @@ ion-content{
     box-shadow: 0px 5px 10px -10px #aaa;
     border-radius: 0 0 25px 25px;
 
-    // margin-bAottom: 2em;
   }
 
+  .t-login {
+    
+    text-align: center;
+    padding-bottom: 0.5em;
+    span {
+      border-bottom: 2px solid var(--ion-color-secondary);
+      padding-bottom: 0.5em;
+      top: 4em !important;
+      position: relative;
+    }
+  }
+
+  .contenu {
+    padding: 9%;
+  }
 
   ion-button {
     --border-radius: none;
@@ -99,29 +65,14 @@ ion-content{
   ion-button {
       transform: scale(0.95);
       --background-activated: #f9961e;
-      --background-hover: #f9961e;
+      --background-hover: #f3b972;
 }
 
-//   .logo {
-//     position: relative;
-//     height: 78%;
-//   }
+}
+.fraisc{
 
-//   .entete img {
-//     width: 25%;
-//     position: absolute;
-//     top: 45%;
-//     left: 50%;
-//     transform: translate(-50%, -50%);
-//   }
-
-//   .t-login {
-//     text-align: center;
-//     padding-bottom: 0.5em;
-//     span {
-//       border-bottom: 2px solid var(--ion-color-secondary);
-//       padding-bottom: 0.5em;
-//     }
-//   }
-// 
+  --background-color: rgb(94, 12, 12);
+  box-shadow: 0px 5px 10px -10px #aaa;
+  --border-radius: 10em;
+  width: 80%;
 }

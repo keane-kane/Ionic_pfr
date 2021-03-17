@@ -1,11 +1,12 @@
-<div class="div-header">
+<ion-header>
+  <div class="div-header">
+  </div>
   <ion-toolbar>
     <img class="tolbarimg" src="assets/images/moneyy.jpg" />
   </ion-toolbar>
   <h1>Login </h1>
-  <hr class="hr">
-</div>
 
+</ion-header>
 <ion-content color="" padding>
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-grid>
@@ -27,15 +28,15 @@
               email
               required
             ></ion-input>
-            <ion-text color="danger">
-              <p
-                [hidden]="email.valid || submitted == false"
-                class="ion-margin text-sm"
-              >
-                Email est obligatoire
-              </p>
-            </ion-text>
           </ion-item>
+          <ion-text color="danger">
+            <p
+              [hidden]="email.valid || submitted == false"
+              class="ion-margin text-sm"
+            >
+              Email est obligatoire
+            </p>
+          </ion-text>
 
           <ion-item class="form-input">
             <ion-label position="floating">
