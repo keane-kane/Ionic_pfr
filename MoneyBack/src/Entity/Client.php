@@ -20,7 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *      normalizationContext   ={"groups"={"client:read"}},
  *      denormalizationContext   ={"groups"={"client:wrie"}},
  *      attributes={
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
+ *          "security"="is_granted('ROLE_ADMIN_AGENCE' or 'ROLE_USER_AGENCE' )",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
  *     collectionOperations={

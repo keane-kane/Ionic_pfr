@@ -28,20 +28,22 @@
   </div>
 </ion-header>
 <ion-content>
-  <div>
-    <div class="ion-margin-bottom">
+  
+  <div  class="ion-padding">
+    <div class="">
       <ion-row>
         <ion-col>
-          <div><h2>Type</h2></div>
+          <div><h4>Type</h4></div>
         </ion-col>
         <ion-col>
-          <div><h2>Du</h2></div>
+          <div><h4>Du</h4></div>
         </ion-col>
         <ion-col>
-          <div><h2>Au</h2></div>
+          <div><h4>Au</h4></div>
         </ion-col>
       </ion-row>
     </div>
+    
     <ion-row>
       <ion-col>
         <div><h6>Date</h6></div>
@@ -56,33 +58,30 @@
     <!--commision-->
     <ion-row *ngFor="let commission of commissions; let i=index">
       <ion-col>
-        <ng-container *ngIf="commission.type == 'depot'; else elseTemplat">
-          <h6>{{commission.dateDepot|date:'shortDate'}}</h6>
-        </ng-container>
-        <ng-template #elseTemplat>
-          <span *ngIf="!commission.dateRtrait"> pas encore retirer</span>
-          <h6>{{commission.dateRtrait|date:'shortDate'}}</h6>
-        </ng-template>
-      </ion-col>
-      <ion-col>
-        <ng-container *ngIf="commission.type == 'depot'; else elseTemplate">
-          <h6>Depot</h6>
-        </ng-container>
+        <div *ngIf="commission.type == 'depot'; else elseTemplate">
+          {{commission.dateDepot|date:'shortDate'}}</div>
         <ng-template #elseTemplate>
-          <h6>Retrait</h6>
-        </ng-template>
+          <!-- <span *ngIf="!commission.dateRtrait" class="non-r">non-retirer</span> -->
+          {{commission.dateRetrait|date:'shortDate'}}</ng-template>
       </ion-col>
+
       <ion-col>
-        <div><h6>{{commission.montant}}</h6></div>
+        <div *ngIf="commission.type == 'depot';  else elseTemplat">Depot</div>
+        <ng-template #elseTemplat>Retrait</ng-template>
       </ion-col>
-    
+
+      <ion-col>
+        <div *ngIf="commission.type == 'depot';  else part">{{commission.partDepot}}</div>
+        <ng-template #part>{{commission.partRetrait}}</ng-template>
+      </ion-col>
     </ion-row>
-    <div><h6>Total {{total}}</h6></div>
+    <ion-item>
+      <div>
+          <h5>Total :  <span>{{total}} </span></h5>
+      </div>
+    </ion-item>
+    
   </div>
 
-
-  <!-- <span>
-
-  </span> -->
-  <!-- <ion-nav [root]="rootPage1"></ion-nav> -->
+<!-- <ion-nav class="nav" [root]="rootPage"></ion-nav> -->
 </ion-content>

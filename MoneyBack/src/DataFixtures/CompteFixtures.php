@@ -13,17 +13,17 @@ class CompteFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-    //     $faker = Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
 
-    //     ($compte = new Compte())
-    //         ->setCode($faker->isbn13)
-    //         ->setMontant($faker->randomNumber())
-    //         ->setCreateAt(new \DateTime())
-    //         ->setArchive(false)
-    //     ;
-    //     $manager->persist($compte);
-    //     $this->addReference('compte', $compte);
-    //     $manager->flush();
+        ($compte = new Compte())
+            ->setCode($faker->isbn13)
+            ->setMontant($faker->randomNumber())
+            ->setCreateAt(new \DateTime())
+            ->setArchive(false)
+        ;
+        $manager->persist($compte);
+        $this->addReference('compte', $compte);
+        $manager->flush();
     }
     public function getDependencies()
     {

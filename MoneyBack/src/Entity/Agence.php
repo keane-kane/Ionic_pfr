@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      attributes={
  *          "force_eager"=false,
  *          "pagination_items_per_page"=30,
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
+ *          "security"="is_granted('ROLE_ADMIN_AGENCE')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
  *     collectionOperations={

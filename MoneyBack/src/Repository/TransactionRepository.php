@@ -51,38 +51,46 @@ class TransactionRepository extends ServiceEntityRepository
      * @return Transaction[] Returns an array of Transaction objects
      */
   
-    public function findByCode($no, $code): ?Transaction
+    public function findByCode($no, $code)
     {
         return $this->createQueryBuilder('t')
             ->select('t')
             ->addSelect('c')
             ->Join('t.clientTrans', 'c')
             ->andWhere('t.code = :code')
-            ->andWhere('t.codeValide = false')
-            ->andWhere('t.annulertransac = false')
-            ->orWhere('c.phoneBeneficiaire = :no',)
+            ->andWhere('c.phoneBeneficiaire = :no',)
+            ->andWhere('t.codeValide = :codev')
+            ->andWhere('t.type = :type')
+            ->andWhere('t.annulertransac = :trans')
+            ->andWhere('t.archive = :avchi')
             ->setParameter('no', $no)
             ->setParameter('code', $code)
-            ->orderBy('t.id', 'DESC')
-            ->setMaxResults(1)
+            ->setParameter('type', 'depot')
+            ->setParameter('codev', 0)
+            ->setParameter('trans', 0)
+            ->setParameter('avchi', 0)
             ->getQuery()
             ->getResult()
         ;
     }
     
-    public function findOneByIdOrCode($value)
+    public function findOneByIdOrCode($value): ?Transaction
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.code = :val')
             ->orWhere('t.id=:val')
-            ->andWhere('t.archive = :false')
-            ->andWhere('t.annulertransac = :false')
+            ->andWhere('t.archive = :archive')
+            ->andWhere('t.codeValide = :codev')
+            ->andWhere('t.annulertransac = :trans')
             ->setParameter('val', $value)
-            ->setParameter('false', false)
-            ->setParameter('false', false)
+            ->andWhere('t.type = :type')
+            ->setParameter('archive', 0)
+            ->setParameter('trans', 0)
+            ->setParameter('codev', 0)
+            ->setParameter('type', 'depot')
             ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 }

@@ -22,7 +22,15 @@ ion-header {
     }
   }
 }
-
+.ion-button{
+  position: relative;
+  top: 2em;
+  background:#fff;
+  ion-icon{
+    color:  #f9961e;
+    font-size: 25px;
+  }
+}
 
 ion-content{
   .entete {

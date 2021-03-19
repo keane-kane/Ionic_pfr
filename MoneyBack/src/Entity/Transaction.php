@@ -20,8 +20,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *      normalizationContext   ={"groups"={"trans:read"}},
  *      denormalizationContext   ={"groups"={"trans:write"}},
  *      attributes={
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
- *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
  *     collectionOperations={
  *          "get"={
@@ -40,10 +38,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *            },
  *          "get_client"={
  *              "path"="/transactions/{code}",
- *               "method"="get",
+ *               "method"="GET",
  *               "controller"=App\Controller\TransactionController::class
  *            },
- *         "PUT"={
+ *         "put"={
  *             "path"="/transactions/{id}"
  *          },
  *        "DELETE"={

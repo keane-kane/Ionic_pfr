@@ -18,6 +18,7 @@ export class AccueilPage implements OnInit {
   rootPage: any = TabsPage;
   montant: any;
   dateString: string;
+  currentUser: any;
   constructor(
     platform: Platform,
     private router: Router,
@@ -35,7 +36,8 @@ export class AccueilPage implements OnInit {
 
   ngOnInit() {
     this.sharedService.url = '/users';
-    const { username } =  this.sessionService.getItem('currentUser');
+    this.currentUser = this.sessionService.getItem('currentUser');
+    const { username } = this.currentUser;
     this.sharedService.getById(username).subscribe(
       res => {
            this.montant = new Intl.NumberFormat().format(res.agencePartenaire.compte.montant);
@@ -49,7 +51,7 @@ export class AccueilPage implements OnInit {
     this.sessionService.removeItem('active-menu');
     this.router.navigate(['/login']);
   }
- 
+
   formattedDate() {
     const m = new Date();
     const dateString =

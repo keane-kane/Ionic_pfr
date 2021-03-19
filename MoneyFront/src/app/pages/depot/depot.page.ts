@@ -6,6 +6,8 @@ import { AlertController, LoadingController, ToastController } from '@ionic/angu
 import { SharedService } from 'src/app/core/services/shared.service';
 import { RouteStateService } from 'src/app/core/services/route-state.service';
 
+import { SMS } from '@ionic-native/sms/ngx';
+
 @Component({
   selector: 'app-depot',
   templateUrl: './depot.page.html',
@@ -21,13 +23,14 @@ export class DepotPage implements OnInit {
   depots: any;
 
   constructor(
+    private sms: SMS,
     private fb: FormBuilder,
     public router: Router,
     private sharedService: SharedService,
     public alertController: AlertController,
     public loadingController: LoadingController,
     public toastController: ToastController,
-    private routeStateService: RouteStateService,
+    private routeStateService: RouteStateService, 
   ) {
      this.sharedService.url = '/transactions';
    }
@@ -74,6 +77,9 @@ export class DepotPage implements OnInit {
     this.frais = this.sharedService.getFrais(montant);
     this.montantTotal = String(Number(this.frais) + Number(montant));
   }
+  sendSms(){
+    this.sms.hasPermission();
+  }
   segmentChanged(ev: any) {
     console.log('Segment changed', ev);
   }
@@ -99,7 +105,12 @@ export class DepotPage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'confirmeDepot',
       header: 'confirmation dépôt',
-      message: `<p>Emetteur</p><p>${clientTrans.nomClient} </p><p>Telephone</p><p>${clientTrans.phoneClient}</p><p>N°CNI</p><p>${clientTrans.cniClient}</p><p>Montant a envoyer</p><p>${montant}</p><p>Recepteur</p><p>${clientTrans.nomBeneficiaire}</p><p>Telephone</p><p>${clientTrans.phoneBeneficiaire}</p>`,
+      message: `<p>Emetteur</p><p>${clientTrans.nomClient} </p>
+                <p>Telephone</p><p>${clientTrans.phoneClient}</p>
+                <p>N°CNI</p><p>${clientTrans.cniClient}</p>
+                <p>Montant a envoyer</p><p>${montant}</p>
+                <p>Recepteur</p><p>${clientTrans.nomBeneficiaire}</p>
+                <p>Telephone</p><p>${clientTrans.phoneBeneficiaire}</p>`,
       buttons: [
         {
           text: 'annuler',
@@ -122,8 +133,8 @@ export class DepotPage implements OnInit {
                 );
                 //  this.router.navigateByUrl('/transaction');
                 this.routeStateService.add(
-                  'Users',
-                  '/transaction',
+                  'Depot',
+                  '/mestransaction',
                   null,
                   true
                 );

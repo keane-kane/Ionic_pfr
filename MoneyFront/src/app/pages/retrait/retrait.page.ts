@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -13,10 +13,11 @@ import { RouteStateService } from '../../core/services/route-state.service';
 export class RetraitPage implements OnInit {
 
   form: FormGroup;
-  segment = 'emetteur';
+  segment = 'beneficiaire';
   clientData: any = {};
-  infos: any = {};
   retrait: any = {};
+  infos: any = {};
+  annulerretrait: FormGroup;
   afficher = false;
 
   constructor(    private fb: FormBuilder,
@@ -32,41 +33,62 @@ export class RetraitPage implements OnInit {
 
    ngOnInit() {
     this.initForm();
+
+    this.annulerretrait =  new FormGroup({
+      annulerTransac: new FormControl(true),
+      type: new FormControl('depot')
+    });
   }
 
+ // init form
   initForm() {
     this.form = new FormGroup({
       montant: new FormControl(''),
-      frais: new FormControl(0),
+      frais: new FormControl(''),
       type: new FormControl('retrait'),
       clientTrans: new FormGroup({
         cniClient: new FormControl(''),
-        cniBeneficiaire:  new FormControl('',  {
+        cniBeneficiaire:  new FormControl('', {
           updateOn: 'blur',
-          validators: [Validators.required, Validators.minLength(1)]
+          validators: [Validators.required]
         }),
         nomClient: new FormControl(''),
         nomBeneficiaire: new FormControl(''),
         phoneBeneficiaire: new FormControl(''),
         phoneClient: new FormControl(''),
+        annulerTransac: new FormControl(false),
       }),
     });
   }
 
-// recuparation du code de retrait;
+ // set data
+  // setData(data, form){
+  //   const { montant , code} = data ;
+  //   const {nomBeneficiaire, nomClient, cniClient, phoneClient, phoneBeneficiaire }  = data.clientTrans ;
 
+  //   form.value.code = code ;
+  //   form.value.montant = montant ;
+  //   form.value.clientTrans.nomBeneficiaire = nomBeneficiaire;
+  //   form.value.clientTrans.nomClient = nomClient;
+  //   form.value.clientTrans.cniClient = cniClient;
+  //   form.value.clientTrans.phoneClient = phoneClient;
+  //   form.value.clientTrans.phoneBeneficiaire = phoneBeneficiaire;
+  //   const  cnib = form.value.clientTrans.cniBeneficiaire = form.value.clientTrans.cniBeneficiaire.toString();
+  //   console.log(form.value);
+  //   console.log(form);
+
+  // }
+
+// recuparation du code de retrait;
   getClientRetrait(code){
     if (code.valid){
       console.log(code);
-      this.sharedService.url = '/transactions';
-      const c = '381969784';
+      const c = '243778149 493828411';
       // tslint:disable-next-line: deprecation
       this.sharedService.getCLientR(code.value).subscribe(
         (retrait) => {
           this.clientData = retrait;
           this.infos = this.clientData.clientTrans;
-          console.log(this.clientData);
-          this.afficher = true;
 
         },
         (err) => {
@@ -83,93 +105,122 @@ export class RetraitPage implements OnInit {
 
   onSubmit(){
     this.sharedService.url = '/transactions';
- 
-    this.presentAlert();
+    this.presentAlertRetrait();
   }
 
- async presentAlert() {
-  const { montant , code} = this.clientData ;
-  const {nomBeneficiaire, nomClient, cniClient, phoneClient, phoneBeneficiaire }  = this.infos ;
+  async presentAlertRetrait() {
 
-  this.form.value.code = code ;
-  this.form.value.montant = montant ;
-  this.form.value.clientTrans.nomBeneficiaire = nomBeneficiaire;
-  this.form.value.clientTrans.nomClient = nomClient;
-  this.form.value.clientTrans.cniClient = cniClient;
-  this.form.value.clientTrans.phoneClient = phoneClient;
-  this.form.value.clientTrans.phoneBeneficiaire = phoneBeneficiaire;
-  const  cnib = this.form.value.clientTrans.cniBeneficiaire = this.form.value.clientTrans.cniBeneficiaire.toString();
-  console.log(this.form.value);
-  const alert = await this.alertController.create({
-    cssClass: 'confirmeDepot',
-    header: 'confirmation Retraitt',
-    message: `<p>Emetteur</p><p>${nomBeneficiaire} </p><p>Telephone</p><p>${phoneBeneficiaire}</p><p>N°CNI</p><p>${cnib}</p><p>Montant a envoyer</p><p>${montant}</p><p>Emetteur</p><p>${nomClient}</p><p>Telephone</p><p>${phoneClient}</p>`,
-    buttons: [
-      {
-        text: 'annuler',
-        role: 'cancel',
+    const { montant , code, frais} = this.clientData ;
+    const {nomBeneficiaire, nomClient, cniClient, phoneClient, phoneBeneficiaire }  = this.infos ;
+    this.form.value.code = code ;
+    this.form.value.montant = montant ;
+    this.form.value.frais = Number(frais);
+    this.form.value.clientTrans.nomBeneficiaire = nomBeneficiaire;
+    this.form.value.clientTrans.nomClient = nomClient;
+    this.form.value.clientTrans.cniClient = cniClient;
+    this.form.value.clientTrans.phoneClient = phoneClient;
+    this.form.value.clientTrans.phoneBeneficiaire = phoneBeneficiaire;
 
-        handler: () => {
-          console.log('Confirm Cancel: blah');
+    const  cnib = this.form.value.clientTrans.cniBeneficiaire = this.form.value.clientTrans.cniBeneficiaire.toString();
+    console.log(this.form.value);
+
+    const alert = await this.alertController.create({
+      cssClass: 'confirmeRetrait',
+      header: 'confirmation Retraitt',
+      message: `<p>Emetteur</p><p>${nomBeneficiaire}</p>
+                <p>Telephone</p><p>${phoneBeneficiaire}</p>
+                <p>N°CNI</p><p>${cnib}</p>
+                <p>Montant a envoyer</p><p>${montant}</p>
+                <p>Emetteur</p><p>${nomClient}</p>
+                <p>Telephone</p><p>${phoneClient}</p>`,
+      buttons: [
+        {
+          text: 'annuler',
+          role: 'cancel',
+
+          handler: () => {
+            console.log('Confirm Cancel:eeeeeee');
+          },
         },
-      },
-      {
-        text: 'confirmer',
-        cssClass: 'secondary',
-        handler: () => {
-          this.presentLoading();
-          this.sharedService.create(this.form.value).subscribe(
-            (depot) => {
-              this.presentToast(
-                'success',
-                'transaction effectuee avec succes'
-              );
-              this.router.navigateByUrl('/transaction');
-            },
-            (err) => {
-              this.presentToast();
-            }
-          );
+        {
+          text: 'confirmer',
+          cssClass: 'secondary',
+          handler: () => {
+            this.presentLoading();
+            this.sharedService.create(this.form.value).subscribe(
+              (depot) => {
+                this.presentToast(
+                  'success',
+                  'transaction effectuee avec succes'
+                );
+                this.router.navigateByUrl('/mestransaction');
+                this.routeStateService.add(
+                  'Retrait',
+                  '/transaction',
+                  null,
+                  true
+                );
+              },
+              (err) => {
+                this.presentToast();
+              }
+            );
+          },
         },
-      },
-    ],
-  });
-  await alert.present();
-}
-async presentLoading() {
-  const loading = await this.loadingController.create({
-    cssClass: 'my-custom-class',
-    message: 'S\'il vous plaît, attendez...',
-    duration: 1000,
-  });
-  await loading.present();
+      ],
+    });
+    await alert.present();
+  }
 
-  const { role, data } = await loading.onDidDismiss();
-  console.log('Loading dismissed!');
-}
 
-async presentToast(color = 'danger', message = 'une erreur est survenue.') {
-  const toast = await this.toastController.create({
-    color,
-    message,
-    duration: 2000,
-    position: 'top',
-  });
-  toast.present();
- }
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'S\'il vous plaît, attendez...',
+      duration: 1000,
+    });
+    await loading.present();
 
- onCancel() {
-  this.clientData.annulertransac = true;
-  this.clientData.dateRetrait = new Date();
-  console.log(this.clientData);
-  
-  this.presentAlertCancelTransaction(this.clientData);
-}
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
+  }
 
-async presentAlertCancelTransaction(transaction) {
+
+  async presentToast(color = 'danger', message = 'une erreur est survenue.') {
+    const toast = await this.toastController.create({
+      color,
+      message,
+      duration: 2000,
+      position: 'top',
+    });
+    toast.present();
+  }
+
+  // annuler depot
+  onCancel() {
+    const { montant , code, frais} = this.clientData ;
+    const {nomBeneficiaire, nomClient, cniClient, phoneClient, phoneBeneficiaire }  = this.infos ;
+    this.form.value.code = code ;
+    this.form.value.montant = montant ;
+    this.form.value.type = 'depot' ;
+    this.form.value.annulerTransac = true ;
+    this.form.value.frais = Number(frais);
+    this.form.value.clientTrans.nomBeneficiaire = nomBeneficiaire;
+    this.form.value.clientTrans.nomClient = nomClient;
+    this.form.value.clientTrans.cniClient = cniClient;
+    this.form.value.clientTrans.phoneClient = phoneClient;
+    this.form.value.clientTrans.phoneBeneficiaire = phoneBeneficiaire;
+    this.form.value.clientTrans.cniBeneficiaire = this.form.value.clientTrans.cniBeneficiaire.toString();
+
+    console.log(this.form.value);
+    
+    this.presentCancelTransaction( this.form.value);
+  }
+
+async presentCancelTransaction(transaction) {
   const alert = await this.alertController.create({
     cssClass: 'my-custom-class',
-    header: 'Confirm!',
+    header: 'Confirm !',
     message: 'Souhaitez vous annuler la transaction',
     buttons: [
       {
@@ -181,18 +232,16 @@ async presentAlertCancelTransaction(transaction) {
         text: 'Oui',
         handler: () => {
           if (this.form.valid) {
-            const { id } = transaction;
-
             this.presentLoading();
-            this.sharedService.update(transaction, id).subscribe(
+            this.sharedService.create(transaction).subscribe(
               (res) => {
-                this.presentToast('success');
+                this.presentToast('success', 'La transaction a été annuler !');
                 this.routeStateService.add(
-                  'Users',
-                  '/transaction',
+                  'Annuler',
+                  '/mestransaction',
                   null,
                   true
-                );;
+                );
               },
               (err) => {
                 this.presentToast();
@@ -203,7 +252,6 @@ async presentAlertCancelTransaction(transaction) {
       },
     ],
   });
-
   await alert.present();
 }
 }

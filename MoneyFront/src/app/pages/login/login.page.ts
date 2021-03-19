@@ -62,8 +62,7 @@ export class LoginPage implements OnInit {
         const isExpired = decodedToken.iat;
 
         switch (decodedToken.roles[0]) {
-          case 'ROLE_CAISSIER':
-          case 'ROLE_ADMIN_SYS': {
+          case 'ROLE_ADMIN_AGENCE': {
             this.userContextService.setUser(decodedToken);
             this.routeStateService.add(
               'Users',
@@ -73,7 +72,6 @@ export class LoginPage implements OnInit {
             );
             break;
           }
-          case 'ROLE_ADMIN_AGENCE':
             case 'ROLE_USER_AGENCE': {
               this.userContextService.setUser(decodedToken);
               this.routeStateService.add(

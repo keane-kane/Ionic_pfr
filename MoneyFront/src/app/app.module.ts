@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SidemenuPageModule } from './pages/sidemenu/sidemenu.module';
 import { SidemenuPage } from './pages/sidemenu/sidemenu.page';
 
+import { SMS } from '@ionic-native/sms/ngx';
 @NgModule({
   declarations: [AppComponent, SidemenuPage],
   entryComponents: [],
@@ -24,6 +25,7 @@ import { SidemenuPage } from './pages/sidemenu/sidemenu.page';
 
   providers: [
     AuthGuard,
+    SMS,
     httpInterceptorProviders,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -22,8 +22,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'admin-agence',
-    loadChildren: () => import('./pages/admin-agence/admin-agence.module').then( m => m.AdminAgencePageModule),
+    path: 'transactionencours',
+    loadChildren: () => import('./pages/transactionencours/transaction.module').then( m => m.TransactionencoursPageModule),
     canLoad: [AuthGuard]
   },
   {

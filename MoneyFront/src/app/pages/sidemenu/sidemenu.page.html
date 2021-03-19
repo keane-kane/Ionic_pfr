@@ -1,14 +1,30 @@
 <ion-menu side="start" menuId="main-menu" contentId="main">
 
-  <ion-menu-toggle >
-    <ion-item *ngFor="let pages of navigate" [routerLink]="pages.url" routerDirection="forward">
-        <ion-icon [name]="pages.icon" slot="start"></ion-icon>
-           {{pages.title}} 
+  <ion-menu-toggle>
+
+    <ion-item  routerLink="home"  routerDirection="forward">
+      <ion-icon name="home-outline" slot="start"></ion-icon>
+      Home
     </ion-item>
-    <ion-item  (click)="logOut()">
+
+    <ion-item  routerLink="mestransaction"  routerDirection="forward">
+      <ion-icon name="sync-outline" slot="start"></ion-icon>
+      Transactions
+    </ion-item>
+
+    <ion-item  routerLink="commision"  routerDirection="forward"  *ngIf=" currentUser !== 'ROLE_USER_AGENCE'">
+      <ion-icon name="cash-outline" slot="start"></ion-icon>
+      Commissions
+    </ion-item>
+
+    <ion-item  routerLink="calcfrais"  routerDirection="forward">
+      <ion-icon name="calculator-outline" slot="start"></ion-icon>
+      Calculatrice
+    </ion-item>
+
+    <ion-item class="deconnect" routerLink="login" (click)="logOut()" routerDirection="forward">
       <ion-icon name="log-out" slot="start"></ion-icon>
          Déconnexion
   </ion-item>
   </ion-menu-toggle>
- 
 </ion-menu>

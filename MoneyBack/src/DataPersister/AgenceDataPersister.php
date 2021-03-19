@@ -44,14 +44,14 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, $contexts = [])
     {   
         $lastId = 0;
-        if((isset($contexts["collection_operation_name"]) ?? null ) === "post" )
+        if((($contexts["collection_operation_name"]) ?? null ) === "post" )
         {
             
             if($this->agenceRepository->getLastId());
             {
                 $lastId = (int)$this->agenceRepository->getLastId();
             } 
-            dd('posr');
+            //dd('posr');
             
             if ($data->getUsers()[0]->getPassword()) {
                 $data->getUsers()[0]->setPassword(

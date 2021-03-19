@@ -12,15 +12,15 @@
       <ion-icon name="home-outline"></ion-icon>
      </ion-tab-button>
 
-    <ion-tab-button routerLink="/tab2" routerDirection="root"  tab="tab2">
+    <ion-tab-button routerLink="/mestransaction" routerDirection="root"  tab="tab2">
       <ion-icon name="sync-outline"></ion-icon>
          </ion-tab-button>
 
-    <ion-tab-button routerLink="/tab3" routerDirection="root"  tab="tab3">
+    <ion-tab-button   *ngIf=" currentUser.roles[0] != 'ROLE_USER_AGENCE'" routerLink="/commission" routerDirection="root"  tab="tab3">
       <ion-icon name="cash-outline"></ion-icon>
     </ion-tab-button>
     
-    <ion-tab-button routerLink="/tab3" routerDirection="root"  tab="tab3">
+    <ion-tab-button routerLink="/calcfrais" routerDirection="root"  tab="tab3">
       <ion-icon name="calculator-outline"></ion-icon>
     </ion-tab-button>
 

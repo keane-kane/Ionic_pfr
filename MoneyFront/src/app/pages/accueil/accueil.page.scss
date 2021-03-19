@@ -67,7 +67,7 @@ ion-content {
         // border-bottom: 2px solid var(--ion-color-warning);
         // line-height: 2em;
         ion-icon {
-          color: #f84e4e;
+          color: #f9961e;
           font-size: 1.5em !important;
         }
   
@@ -102,8 +102,8 @@ ion-item {
 }
 
 ion-button {
-    transform: scale(0.95);
-    --background-activated: #f9961e;
-    --background-hover: #f9961e;
+  transform: scale(0.95);
+  --background-activated: #f9961e;
+  --background-hover: #f9961e;
 }
 

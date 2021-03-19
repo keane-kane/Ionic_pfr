@@ -34,8 +34,8 @@ class TransactionController extends AbstractController
      */
     public function findByCode($code)
     {
-        $clientR = $this->ripo->findOneByIdOrCode(976841167);
-        return $this->json($clientR[0], Response::HTTP_OK);
+        $clientR = $this->ripo->findOneByIdOrCode($code);
+        return $this->json($clientR, Response::HTTP_OK);
 
     }
     // // app/config/routing.yml (["codeValide" => false, "code"=>$code])

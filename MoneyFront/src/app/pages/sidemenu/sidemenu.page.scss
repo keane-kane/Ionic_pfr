@@ -1,7 +1,15 @@
-.my-custom-menu {
-  --width: 500px;
+ion-menu, ion-menu-toggle  {
+  width: 90%;
+  height: 100%;
+  background: #f9961e;
 }
-ion-menu, ion-menu-toggle, ion-item{
-  --background: orangered;
+ion-item{
+  top: 4em !important;
+  --background: #f9961e;
   color: aliceblue;
+  width: 80%;
+  font-size: 16px !important;
+}
+.deconnect{
+  top: 15em !important;
 }

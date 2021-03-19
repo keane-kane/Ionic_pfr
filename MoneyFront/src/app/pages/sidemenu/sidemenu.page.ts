@@ -12,28 +12,28 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
 })
 export class SidemenuPage implements OnInit {
 
-
+  currentUser =  'ROLE_ADMIN_AGENCE';
   navigate: any =
   [
     {
       title : 'Home',
       url   : '/home',
-      icon  : 'home'
+      icon  : 'home-outline'
     },
     {
       title : 'Transactions',
       url   : '/transaction',
-      icon  : 'sync'
+      icon  : 'sync-outline'
     },
     {
       title : 'Commissions',
       url   : '/commision',
-      icon  : 'logo-euro'
+      icon  : 'cash-outline'
     },
     {
       title : 'Calculatrice',
       url   : '/calcfrais',
-      icon  : 'calculator'
+      icon  : 'calculator-outline'
     },
 
   ];
@@ -48,6 +48,7 @@ export class SidemenuPage implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.currentUser = this.sessionService.getItem('currentUser');
   }
 
 

@@ -16,6 +16,7 @@ import { AccueilPage } from './accueil.page';
     AccueilPageRoutingModule
   ],
   declarations: [AccueilPage],
+
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AccueilPageModule {}

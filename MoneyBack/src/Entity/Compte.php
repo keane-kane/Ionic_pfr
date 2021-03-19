@@ -22,7 +22,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *      attributes={
  *          "force_eager"=false,
  *          "pagination_items_per_page"=30,
- *          "security"="is_granted('ROLE_ADMIN_SYS')",
+ *          "security"="is_granted('ROLE_ADMIN_AGENCE' or 'ROLE_USER_AGENCE')",
  *          "security_message"="Acces refusé vous n'avez pas l'autorisation"
  *     },
  *     collectionOperations={

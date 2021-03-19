@@ -54,15 +54,15 @@
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-item>
 
-    <ion-item lines="none" color='white'>
+    <ion-item lines="none" color='white' *ngIf=" currentUser.roles[0] != 'ROLE_USER_AGENCE'">
       <ion-icon name="sync-outline"></ion-icon>
       <ion-button fill="clear" type="button"  routerLink="/ttesmestransaction"> Toutes mes Transac... </ion-button>
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-item>
  
-    <ion-item lines="none" color='white'>
+    <ion-item lines="none" color='white' *ngIf=" currentUser.roles[0] != 'ROLE_USER_AGENCE'">
       <ion-icon name="log-in-outline"></ion-icon>
-      <ion-button fill="clear" type="button"  routerLink="/commission"> Mes Commissions </ion-button>
+      <ion-button fill="clear" type="button"  routerLink="/commission" > Mes Commissions </ion-button>
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-item>
 

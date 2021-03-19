@@ -11,10 +11,17 @@ import { HttpHeaders } from '@angular/common/http';
 export class SharedService {
   constructor(private http: HttpClient) {}
   url = '';
-  headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  options = { headers: this.headers };
+  // headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  /// options = { headers: this.headers };
+   headers = new HttpHeaders()
+  .set('Content-Type', 'application/json')
+  .set('Access-Control-Allow-Origin', '*')
+  .set('Access-Control-Allow-Methods', 'put')
+  .set('Access-Control-Allow-Methods', 'put')
+  .set('Accept', 'application/json')
+  .set('Access-Control-Allow-Credentials', 'true');
 
-  tabs: { val: number, m: number[] }[] = [
+tabs: { val: number, m: number[] }[] = [
       {val: 425, m: [ 0, 5000]},
       {val: 850,  m: [5000, 10000]},
       {val: 1270 , m: [10000, 15000]},
@@ -39,7 +46,7 @@ export class SharedService {
 
 
 
-  getAll(): any {
+getAll(): any {
     return this.http
       .get(environment.apiUrl + this.url, {
         headers: { Accept: 'application/json' },
@@ -57,27 +64,25 @@ export class SharedService {
       );
   }
 
-  getById(value: number | string): any {
+getById(value: number | string): any {
     return this.http.get(`${environment.apiUrl}${this.url}/${value}`, {
       headers: { Accept: 'application/json' },
     });
   }
 
-  create(data: any): any {
+create(data: any): any {
     return this.http
       .post(`${environment.apiUrl}${this.url}`, data)
       .pipe(catchError(this.handleError));
   }
 
-  update(data: any, id: number): any {
+update(data: any, id: number): any {
     return this.http
-      .put(`${environment.apiUrl}${this.url}/${id}`, data, {
-        headers: { Accept: 'application/json' },
-      })
-      .pipe(catchError(this.handleError));
+    .put(`${environment.apiUrl}${this.url}/${id}`, data, {headers: this.headers})
+    .pipe(catchError(this.handleError));
   }
 
-  delete(id: number): any {
+delete(id: number): any {
     return this.http
       .delete(`${environment.apiUrl}${this.url}/${id}`, {
         headers: { Accept: 'application/json' },
@@ -86,7 +91,7 @@ export class SharedService {
   }
 
   // get client retrait
-  getCLientR(code: string){
+getCLientR(code: string){
     return this.http
     .get(`${environment.apiUrl}${this.url}/${code}`)
     .pipe(catchError(this.handleError));
@@ -110,7 +115,7 @@ export class SharedService {
     return throwError('Something bad happened. Please try again later.');
   }
 
-  getFrais(m){
+getFrais(m){
     if (m >= 2000000){
       return m * 0.02;
     }else {

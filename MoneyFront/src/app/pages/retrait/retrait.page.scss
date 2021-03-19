@@ -28,6 +28,7 @@ ion-header {
     background:#fff;
     ion-icon{
       color:  #f9961e;
+      font-size: 25px;
     }
   }
   
@@ -64,28 +65,11 @@ ion-header {
       --background-activated: #f9961e;
       --background-hover: #f9961e;
 }
-  
-  //   .logo {
-  //     position: relative;
-  //     height: 78%;
-  //   }
-  
-  //   .entete img {
-  //     width: 25%;
-  //     position: absolute;
-  //     top: 45%;
-  //     left: 50%;
-  //     transform: translate(-50%, -50%);
-  //   }
-  
-  //   .t-login {
-  //     text-align: center;
-  //     padding-bottom: 0.5em;
-  //     span {
-  //       border-bottom: 2px solid var(--ion-color-secondary);
-  //       padding-bottom: 0.5em;
-  //     }
-  //   }
-  // 
+
+.confirmeRetrait {
+  position: relative;
+  border-radius: 25% !important
+}
+
   }
   

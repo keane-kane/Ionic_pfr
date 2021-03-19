@@ -20,8 +20,4 @@ import { DepotPage } from './depot.page';
 })
 export class DepotPageModule {
 
-
-  segmentChanged(ev: any) {
-    console.log('Segment changed', ev);
-  }
 }

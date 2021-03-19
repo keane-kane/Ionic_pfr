@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from 'src/app/core/services/session.service';
 
 @Component({
   selector: 'app-tabs',
@@ -8,12 +9,15 @@ import { Component, OnInit } from '@angular/core';
 export class TabsPage implements OnInit {
 
 
-
-  constructor() {
+  currentUser: any;
+  constructor(
+    private sessionService: SessionService) {
 
   }
 
   ngOnInit() {
+    this.currentUser = this.sessionService.getItem('currentUser');
   }
 
 }
+

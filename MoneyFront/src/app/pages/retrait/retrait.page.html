@@ -119,21 +119,21 @@
               <ion-label position="stacked">
                 N° CNI
               </ion-label>
-              <ion-input type="number" >{{ infos.cniClient }} </ion-input>
+              <ion-input type="number" readonly >{{ infos.cniClient }} </ion-input>
             </ion-item>
            
           <ion-item lines="none">
             <ion-label position="stacked">
               NOM & PRÉNOM
             </ion-label>
-            <ion-input type="text"> {{ infos.nomClient }} </ion-input>
+            <ion-input type="text" readonly>{{ infos.nomClient }} </ion-input>
 
           </ion-item>
           <ion-item lines="none">
             <ion-label position="stacked">
               Montant à recevoir
             </ion-label>
-            <ion-input type="text"> {{ clientData.montant }} </ion-input>
+            <ion-input type="text" readonly > {{ clientData.montant }} </ion-input>
           </ion-item>
 
           <ion-item lines="none">

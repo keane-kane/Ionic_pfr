@@ -11,7 +11,7 @@ import { SessionService } from '../../core/services/session.service';
   styleUrls: ['./transaction.page.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TransactionPage implements OnInit {
+export class TransactionencoursPage implements OnInit {
   rootPage2: any = TabsPage;
   currentUser: any;
   segment = 'mestransaction';
@@ -20,7 +20,7 @@ export class TransactionPage implements OnInit {
   userA: string;
   total: any;
   montant: any;
-  isuser = false;
+
   constructor(
       private sharedService: SharedService,
       private sessionService: SessionService,
@@ -29,31 +29,26 @@ export class TransactionPage implements OnInit {
 
   ngOnInit() {
 
-    this.currentUser = this.sessionService.getItem('currentUser');
     if (this.segment === 'mestransaction'){
       this.sharedService.url = '/users';
-      this.isuser = true;
+      this.currentUser = this.sessionService.getItem('currentUser');
       const {username} = this.currentUser;
 
       this.sharedService.getById(username).subscribe(
         transac => {
              this.transaction = transac.transactions;
              this.total = new Intl.NumberFormat().format(this.getTotal(this.transaction));
-             console.log(transac);
+             // console.log(transac);
         });
 
-      }
-
-    if (this.isuser){
-      this.sharedService.url = '/transactions';
-      this.sharedService.getAll().subscribe(
-          res => {
-               this.transactions = res;
-               this.montant = new Intl.NumberFormat().format(this.getTotal(res));
-               console.log(this.transactions);
-          });
-
-      }
+    }
+    this.sharedService.url = '/transactions';
+    this.sharedService.getAll().subscribe(
+        res => {
+             this.transactions = res;
+             this.montant = new Intl.NumberFormat().format(this.getTotal(res));
+             console.log(this.transactions);
+        });
 
 
 

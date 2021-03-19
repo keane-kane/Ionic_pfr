@@ -17,7 +17,7 @@ export class UserContextService {
         }
     }
 
-    public setUser(user: any) {
+    public setUser( user: any) {
         this.sessionService.setItem('currentUser', user);
         this.user$.next(user);
     }

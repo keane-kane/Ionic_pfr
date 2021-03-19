@@ -154,11 +154,14 @@ ion-button {
    }
  }
  .item-interactive{
-    --border-color: var(--ion-color-danger, #f1453d);
+    --border-color: var(--ion-color-danger, #f9961e);
     --highlight-color-focused: red;
 //     --ion-input-highlight-color-valid
 // --ion-input-highlight-color-invalid
 // --ion-input-highlight-color-focused
   }
-
+  .confirmeDepot {
+    position: relative;
+    border-radius: 25% !important
+  }
 }
