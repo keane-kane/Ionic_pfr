@@ -30,7 +30,7 @@ export class DepotPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     public toastController: ToastController,
-    private routeStateService: RouteStateService, 
+    private routeStateService: RouteStateService,
   ) {
      this.sharedService.url = '/transactions';
    }
@@ -131,6 +131,7 @@ export class DepotPage implements OnInit {
                   'success',
                   'transaction effectuee avec succes'
                 );
+                this.getCode(depot);
                 //  this.router.navigateByUrl('/transaction');
                 this.routeStateService.add(
                   'Depot',
@@ -170,5 +171,17 @@ export class DepotPage implements OnInit {
       position: 'top',
     });
     toast.present();
+  }
+
+  async getCode(r) {
+    const alert = await this.alertController.create({
+      message: 'CODE : ' + r.code,
+      buttons: ['Okay']
+
+    });
+
+    await alert.present();
+
+
   }
 }

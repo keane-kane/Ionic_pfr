@@ -75,7 +75,7 @@ class TransactionDataPersister implements  ContextAwareDataPersisterInterface
                 $montantDepot = $data->getMontant() - $frais;
                 $curentuser->setMontant($curentuser->getMontant() - $montantDepot + $data->getPartDepot() );
 
-                // $this->_sendSms->send( $data->getMontant());
+                $this->_sendSms->envoiesms($data->getClientTrans()->getPhoneBeneficiaire, $montantDepot, $data->getCode(), $data->getClientTrans()->getNomClient());
                 $this->_entityManager->persist($data);
                 $this->_entityManager->flush();
                 return $data;
@@ -102,6 +102,7 @@ class TransactionDataPersister implements  ContextAwareDataPersisterInterface
                          ->setDateDepot($clientRetrait->getDateDepot())
                          ->setDateRetrait(new \DateTime())
                          ->setPartEtat($clientRetrait->getPartEtat())
+                         ->setCodeValide(true)
                          ->setPartTransfert($clientRetrait->getPartTransfert())
                          ->setPartRetrait($clientRetrait->getPartRetrait())
                          ->setPartDepot($clientRetrait->getPartDepot());

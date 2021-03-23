@@ -1,4 +1,5 @@
 <ion-header>
+  
   <div class="header">
     <ion-toolbar>
       <ion-row justify-content-center>
@@ -27,7 +28,7 @@
               slot="start"
               name="sync-outline"
             ></ion-icon>
-            <ion-text color="secondary">Transaction</ion-text>
+            <ion-text color="secondary">En cours</ion-text>
           </span>
         </ion-col>
       </ion-row>
@@ -36,27 +37,21 @@
 </ion-header>
 
 <ion-content>
+  
   <div class="contenu">
     <ion-segment
       [(ngModel)]="segment"
-      (ionChange)="segmentChanged($event)"
       value="mestransaction"
     >
       <ion-segment-button value="mestransaction">
-        <ion-label>Mes transactions</ion-label>
-      </ion-segment-button>
-      <ion-segment-button
-        *ngIf=" currentUser.roles[0] != 'ROLE_USER_AGENCE'"
-        value="toutmestransaction"
-      >
-        <ion-label>Toutes les transactions</ion-label>
+        <ion-label>Transactions en cours</ion-label>
       </ion-segment-button>
     </ion-segment>
 
     <div [ngSwitch]="segment">
       <div *ngSwitchCase="'mestransaction'">
         <div class="ion-padding">
-          <div class="">
+          <!-- <div class="">
             <ion-row>
               <ion-col>
                 <div><h4>Type</h4></div>
@@ -68,7 +63,7 @@
                 <div><h4>Au</h4></div>
               </ion-col>
             </ion-row>
-          </div>
+          </div> -->
 
           <ion-row>
             <ion-col>
@@ -80,31 +75,39 @@
             <ion-col>
               <div><h6>Montant</h6></div>
             </ion-col>
+            <ion-col>
+              <div><h6>Etat</h6></div>
+            </ion-col>
           </ion-row>
           <!--commision-->
-          <ion-row *ngFor="let t of transaction; let i=index">
+          <ion-row class="content-row" *ngFor="let t of transactions; let i=index">
             <ion-col>
-              <div *ngIf="t.type == 'depot'; else elseTemplate">
                 {{t.dateDepot|date:'shortDate'}}
-              </div>
-              <ng-template #elseTemplate>
-                <span *ngIf="!t.dateRetrait" class="non-r">non-retirer</span>
-                {{t.dateRetrait|date:'shortDate'}}</ng-template
-              >
             </ion-col>
+            <ion-col>
+              Depot
+            </ion-col>
+            <ion-col> {{t.montant}} </ion-col>
 
             <ion-col>
-              <div *ngIf="t.type == 'depot';  else elseTemplat">Depot</div>
-              <ng-template #elseTemplat>Retrait</ng-template>
+              <div *ngIf="t.annulertransac == true;  else elseTemplat">
+                <ion-button
+                class="btn"
+                color="danger"
+                expand=""
+                >Load...</ion-button
+              >
+              </div>
+              <ng-template #elseTemplat>       
+                <ion-button
+                class="bnt"
+                color="success"
+                expand=""
+                >Cancel</ion-button
+              ></ng-template>
             </ion-col>
 
-            <ion-col> {{t.montant}} </ion-col>
           </ion-row>
-          <ion-item>
-            <div>
-              <h5>Total : <span>{{total}} </span></h5>
-            </div>
-          </ion-item>
         </div>
       </div>
 
@@ -168,14 +171,9 @@
 
             <ion-col> {{t.frais}} </ion-col>
           </ion-row>
-          <ion-item>
-            <div>
-              <h5>Total : <span>{{montant}} </span></h5>
-            </div>
-          </ion-item>
         </div>
       </div>
     </div>
+    <!-- <ion-nav [root]="rootPage2"></ion-nav> -->
   </div>
-  <!-- <ion-nav [root]="rootPage2"></ion-nav> -->
 </ion-content>

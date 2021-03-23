@@ -37,22 +37,18 @@ class TransactionController extends AbstractController
         $clientR = $this->ripo->findOneByIdOrCode($code);
         return $this->json($clientR, Response::HTTP_OK);
 
+    } 
+    /**
+     * @Route(
+     *      path="api/transacannler",
+     *      methods={"GET"},
+     * )
+     */
+    public function findByAnnuler()
+    {
+        $clientR = $this->ripo->findBy(['codeValide' => false]);
+        return $this->json($clientR, Response::HTTP_OK);
+
     }
-    // // app/config/routing.yml (["codeValide" => false, "code"=>$code])
-    // person:
-    //     path:      /person/{name}-{age}-{gender}
-    //     defaults:  { _controller: AcmeBlogBundle:Person:index }
-    
-    // // src/Acme/BlogBundle/Controller/PersonController.php
-    // namespace Acme\BlogBundle\Controller;
-    
-    // use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    
-    // class PersonController extends Controller
-    // {
-    //     public function indexAction($name, $age, $gender)
-    //     {
-    //         // do something
-    //     }
-    // }
+  
 }

@@ -92,11 +92,24 @@ export class RetraitPage implements OnInit {
 
         },
         (err) => {
+          this.alertTransac();
         },
         () => {}
       );
     }
   }
+
+  async alertTransac(){
+    const alert = await this.alertController.create({
+      message: 'La Transaction est deja retiré La Transaction à été annulé !!!',
+      buttons: ['Okay']
+
+    });
+
+    await alert.present();
+
+  }
+
 
   segmentChanged(ev: any) {
     console.log('Segment changed', ev);
@@ -213,7 +226,7 @@ export class RetraitPage implements OnInit {
     this.form.value.clientTrans.cniBeneficiaire = this.form.value.clientTrans.cniBeneficiaire.toString();
 
     console.log(this.form.value);
-    
+
     this.presentCancelTransaction( this.form.value);
   }
 

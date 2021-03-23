@@ -24,7 +24,7 @@ const routes: Routes = [
   {
     path: 'transactionencours',
     loadChildren: () => import('./pages/transactionencours/transaction.module').then( m => m.TransactionencoursPageModule),
-    canLoad: [AuthGuard]
+    canLoad: []
   },
   {
     path: 'sidemenu',
